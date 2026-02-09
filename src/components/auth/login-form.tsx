@@ -21,6 +21,9 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 
 import { useForm } from "@tanstack/react-form";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { loginUser } from "@/service/auth.service";
 const formSchema = z.object({
   password: z.string("").min(5, "password must be at least 5 characters."),
   email: z.email(),
@@ -29,6 +32,7 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const router = useRouter();
   const form = useForm({
     defaultValues: {
       email: "",
@@ -39,6 +43,18 @@ export function LoginForm({
     },
     onSubmit: async ({ value }) => {
       console.log(value);
+      const toastId = toast.loading("login...");
+      try {
+        await loginUser({
+          email: value.email,
+          password: value.password,
+        });
+        toast.success("Login Successfully", { id: toastId });
+
+        router.push("/dashboard");
+      } catch (error) {
+        toast.error("Something was wrong", { id: toastId });
+      }
     },
   });
   return (
@@ -72,7 +88,7 @@ export function LoginForm({
                         value={field.state.value}
                         onBlur={field.handleBlur}
                         onChange={(e) => field.handleChange(e.target.value)}
-                        placeholder="Full Name"
+                        placeholder="Email"
                         autoComplete="off"
                       />
                       {isInvalid && (
