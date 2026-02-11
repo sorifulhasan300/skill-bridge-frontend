@@ -15,13 +15,12 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { env } from "@/env";
-import { registerUser } from "@/service/auth.service";
 import { useForm } from "@tanstack/react-form";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import * as z from "zod";
+import { authClient } from "@/lib/auth-client";
 
 const formSchema = z.object({
   name: z.string("").min(5, "password must be at least 5 characters."),
@@ -43,13 +42,16 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
     },
     onSubmit: async ({ value }) => {
       const toastId = toast.loading("login...");
-
       try {
-        await registerUser(value);
+        const { data, error } = await authClient.signUp.email(value);
+        if (error) {
+          toast.error(error.message as string, { id: toastId });
+          return;
+        }
         toast.success("Register Successfully", { id: toastId });
         router.push("/login");
       } catch (error) {
-        toast.error(error as string, { id: toastId });
+        toast.error("Something was wrong, please try again", { id: toastId });
       }
     },
   });

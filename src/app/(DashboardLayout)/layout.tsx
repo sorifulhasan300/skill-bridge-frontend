@@ -1,5 +1,6 @@
+import { AppSidebar } from "@/components/app-sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { Roles } from "@/constants/constants";
-import { proxy } from "@/proxy";
 import { userService } from "@/service/session.service";
 import React, { ReactNode } from "react";
 
@@ -16,10 +17,11 @@ export default async function layout({
   const role = data?.user?.role;
 
   return (
-    <div>
-      {role === Roles.admin && admin}
-      {role === Roles.student && student}
-      {role === Roles.tutor && tutor}
-    </div>
+    <SidebarProvider>
+      <AppSidebar />
+      <div className="flex gap-4 w-full">
+        {role === Roles.admin ? admin : student}
+      </div>
+    </SidebarProvider>
   );
 }

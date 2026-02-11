@@ -30,12 +30,13 @@ import Image from "next/image";
 import { ModeToggle } from "./ModeToggler";
 import { DropdownMenuAvatar } from "./Avatar";
 import Link from "next/link";
-import { userService } from "@/service/session.service";
 import { useEffect, useState } from "react";
-import { getSessionClient } from "@/service/session.clent.service";
 import { logout } from "@/service/logout.service";
 import { useRouter } from "next/navigation";
 import { Roles } from "@/constants/constants";
+import { Spinner } from "../ui/spinner";
+import { getSession } from "@/action/action";
+import { Session } from "@/types/session.type";
 
 interface MenuItem {
   title: string;
@@ -91,16 +92,30 @@ const Navbar = ({
   },
   className,
 }: Navbar1Props) => {
-  const [session, setSession] = useState(null);
+  const [session, setSession] = useState<Session | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const role = session?.user?.role;
   useEffect(() => {
-    getSessionClient()
-      .then(setSession)
-      .finally(() => setLoading(false));
+    const fetchSession = async () => {
+      try {
+        const { data, error } = await getSession();
+        if (error) {
+          setError(error);
+        } else {
+          setSession(data);
+        }
+      } catch (err) {
+        setError(err as string);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSession();
   }, []);
-  console.log(session);
+  const role = session?.user?.role;
+  console.log(role);
   return (
     <section className={cn("py-4", className)}>
       <div className="container w-full mx-auto">
@@ -132,7 +147,9 @@ const Navbar = ({
             <ModeToggle />
             {loading ? (
               <>
-                <h1>loading...</h1>
+                <div className="mt-2">
+                  <Spinner />
+                </div>
               </>
             ) : (
               <>

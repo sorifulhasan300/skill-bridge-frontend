@@ -1,4 +1,5 @@
 "use client";
+import { getSession } from "@/action/action";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,22 +12,18 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Roles } from "@/constants/constants";
 import { logout } from "@/service/logout.service";
-import { getSessionClient } from "@/service/session.clent.service";
-import {
-  BadgeCheckIcon,
-  BellIcon,
-  CreditCardIcon,
-  LogOutIcon,
-} from "lucide-react";
+import { BadgeCheckIcon, LogOutIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 export function DropdownMenuAvatar() {
   const [session, setSession] = useState(null);
 
   useEffect(() => {
-    getSessionClient().then(setSession);
+    (async () => {
+      const { data, error } = getSession();
+      setSession(data);
+    })();
   }, []);
-
   const router = useRouter();
 
   const role = session?.user?.role;

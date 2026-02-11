@@ -23,7 +23,7 @@ import Link from "next/link";
 import { useForm } from "@tanstack/react-form";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { loginUser } from "@/service/auth.service";
+import { authClient } from "@/lib/auth-client";
 const formSchema = z.object({
   password: z.string("").min(5, "password must be at least 5 characters."),
   email: z.email(),
@@ -42,22 +42,13 @@ export function LoginForm({
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
-      // console.log(value);
       const toastId = toast.loading("login...");
-      // try {
-      //   await loginUser({
-      //     email: value.email,
-      //     password: value.password,
-      //   });
-      //   toast.success("Login Successfully", { id: toastId });
-
-      //   router.push("/dashboard");
-      // } catch (error) {
-      //   toast.error("Something was wrong", { id: toastId });
-      // }
-
       try {
-        const result = await loginUser(value);
+        const { data, error } = await authClient.signIn.email(value);
+        if (error) {
+          toast.error(error.message, { id: toastId });
+          return;
+        }
         toast.success("Login Successfully", { id: toastId });
         router.push("/");
       } catch (error) {

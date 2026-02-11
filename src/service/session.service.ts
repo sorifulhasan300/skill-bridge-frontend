@@ -4,14 +4,18 @@ import { cookies } from "next/headers";
 export const userService = {
   getSession: async function () {
     try {
-      const cookiesData = await cookies();
-      const res = await fetch(env.SESSION_URL as string, {
-        headers: {
-          Cookie: cookiesData.toString(),
+      const cookiesStore = await cookies();
+      const res = await fetch(
+        "http://localhost:5000/api/auth/get-session" as string,
+        {
+          headers: {
+            Cookie: cookiesStore.toString(),
+          },
+          cache: "no-store",
         },
-        cache: "no-store",
-      });
+      );
       const session = await res.json();
+
       if (session === null) {
         return { data: null, error: "cookies not found" };
       }
