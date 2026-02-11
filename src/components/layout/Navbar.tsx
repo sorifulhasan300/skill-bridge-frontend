@@ -30,6 +30,7 @@ import Image from "next/image";
 import { ModeToggle } from "./ModeToggler";
 import { DropdownMenuAvatar } from "./Avatar";
 import Link from "next/link";
+import { userService } from "@/service/session.service";
 
 interface MenuItem {
   title: string;
@@ -85,7 +86,6 @@ const Navbar = ({
   },
   className,
 }: Navbar1Props) => {
-  
   return (
     <section className={cn("py-4", className)}>
       <div className="container w-full mx-auto">
