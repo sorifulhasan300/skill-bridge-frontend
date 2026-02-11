@@ -31,6 +31,11 @@ import { ModeToggle } from "./ModeToggler";
 import { DropdownMenuAvatar } from "./Avatar";
 import Link from "next/link";
 import { userService } from "@/service/session.service";
+import { useEffect, useState } from "react";
+import { getSessionClient } from "@/service/session.clent.service";
+import { logout } from "@/service/logout.service";
+import { useRouter } from "next/navigation";
+import { Roles } from "@/constants/constants";
 
 interface MenuItem {
   title: string;
@@ -86,6 +91,16 @@ const Navbar = ({
   },
   className,
 }: Navbar1Props) => {
+  const [session, setSession] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const role = session?.user?.role;
+  useEffect(() => {
+    getSessionClient()
+      .then(setSession)
+      .finally(() => setLoading(false));
+  }, []);
+  console.log(session);
   return (
     <section className={cn("py-4", className)}>
       <div className="container w-full mx-auto">
@@ -114,14 +129,29 @@ const Navbar = ({
             </NavigationMenu>
           </div>
           <div className="flex gap-2">
-            <DropdownMenuAvatar />
             <ModeToggle />
-            <Button asChild variant="outline" size="sm">
-              <Link href={auth.login.url}>{auth.login.title}</Link>
-            </Button>
-            <Button asChild size="sm">
-              <a href={auth.signup.url}>{auth.signup.title}</a>
-            </Button>
+            {loading ? (
+              <>
+                <h1>loading...</h1>
+              </>
+            ) : (
+              <>
+                {session ? (
+                  <>
+                    <DropdownMenuAvatar />
+                  </>
+                ) : (
+                  <>
+                    <Button asChild variant="outline" size="sm">
+                      <Link href={auth.login.url}>{auth.login.title}</Link>
+                    </Button>
+                    <Button asChild size="sm">
+                      <Link href={auth.signup.url}>{auth.signup.title}</Link>
+                    </Button>
+                  </>
+                )}
+              </>
+            )}
           </div>
         </nav>
 
@@ -166,15 +196,35 @@ const Navbar = ({
                   >
                     {menu.map((item) => renderMobileMenuItem(item))}
                   </Accordion>
-
-                  <div className="flex flex-col gap-3">
-                    <Button asChild variant="outline">
-                      <Link href={auth.login.url}>{auth.login.title}</Link>
-                    </Button>
-                    <Button asChild>
-                      <Link href={auth.signup.url}>{auth.signup.title}</Link>
-                    </Button>
-                  </div>
+                  {session ? (
+                    <>
+                      <Button
+                        onClick={() => {
+                          if (role === Roles.admin)
+                            router.push("/admin-dashboard");
+                          else if (role === Roles.tutor)
+                            router.push("/tutor-dashboard");
+                          else router.push("/student-dashboard");
+                        }}
+                      >
+                        Dashboard
+                      </Button>
+                      <Button onClick={() => logout()}>Logout</Button>
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex flex-col gap-3">
+                        <Button asChild variant="outline">
+                          <Link href={auth.login.url}>{auth.login.title}</Link>
+                        </Button>
+                        <Button asChild>
+                          <Link href={auth.signup.url}>
+                            {auth.signup.title}
+                          </Link>
+                        </Button>
+                      </div>
+                    </>
+                  )}
                 </div>
               </SheetContent>
             </Sheet>

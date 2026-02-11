@@ -1,4 +1,5 @@
 import { Roles } from "@/constants/constants";
+import { proxy } from "@/proxy";
 import { userService } from "@/service/session.service";
 import React, { ReactNode } from "react";
 
@@ -12,7 +13,8 @@ export default async function layout({
   tutor: ReactNode;
 }) {
   const { data, error } = await userService.getSession();
-  const role = data.user.role;
+  const role = data?.user?.role;
+
   return (
     <div>
       {role === Roles.admin && admin}
