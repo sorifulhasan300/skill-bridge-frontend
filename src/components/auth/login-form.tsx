@@ -42,16 +42,24 @@ export function LoginForm({
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
-      console.log(value);
+      // console.log(value);
       const toastId = toast.loading("login...");
-      try {
-        await loginUser({
-          email: value.email,
-          password: value.password,
-        });
-        toast.success("Login Successfully", { id: toastId });
+      // try {
+      //   await loginUser({
+      //     email: value.email,
+      //     password: value.password,
+      //   });
+      //   toast.success("Login Successfully", { id: toastId });
 
-        router.push("/dashboard");
+      //   router.push("/dashboard");
+      // } catch (error) {
+      //   toast.error("Something was wrong", { id: toastId });
+      // }
+
+      try {
+        const result = await loginUser(value);
+        toast.success("Login Successfully", { id: toastId });
+        router.push("/");
       } catch (error) {
         toast.error("Something was wrong", { id: toastId });
       }

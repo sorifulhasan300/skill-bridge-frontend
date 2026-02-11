@@ -85,6 +85,7 @@ const Navbar = ({
   },
   className,
 }: Navbar1Props) => {
+  
   return (
     <section className={cn("py-4", className)}>
       <div className="container w-full mx-auto">
