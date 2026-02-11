@@ -14,9 +14,8 @@ import {
 } from "@/components/ui/sidebar";
 import { Roles } from "@/constants/constants";
 import { userService } from "@/service/session.service";
-import { Separator } from "radix-ui";
 import React, { ReactNode } from "react";
-
+import { Separator } from "@/components/ui/separator";
 export default async function layout({
   admin,
   student,
@@ -31,26 +30,22 @@ export default async function layout({
 
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar user={data} />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
             <Breadcrumb>
               <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
-                    Build Your Application
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
+                <BreadcrumbItem className="hidden md:block"></BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                </BreadcrumbItem>
+                <BreadcrumbItem></BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
           </div>
         </header>
+        <Separator />
+
         <div className="pl-4">
           {role === Roles.admin && admin}
 
