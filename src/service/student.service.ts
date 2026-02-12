@@ -1,19 +1,42 @@
 import { env } from "@/env";
+import { cookies } from "next/headers";
 
 export const studentService = {
-  getProfile: async (bookingId: string) => {
+  updateBooking: async (bookingId: string) => {
+    const cookieStore = await cookies();
+    const Cookies = cookieStore.toString();
+
     try {
-      const res = await fetch(`${env.DATABASE_URL}/api/bookings/${bookingId}`);
-      if (!res.ok) {
-        return { data: null, error: "Failed to update booking" };
+      const res = await fetch(`${env.DATABASE_URL}/api/bookings/${bookingId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: Cookies,
+        },
+        body: JSON.stringify({ status: "CANCELLED" }),
+      });
+
+      const contentType = res.headers.get("content-type");
+      let result;
+
+      if (contentType && contentType.includes("application/json")) {
+        result = await res.json();
+      } else {
+        result = { message: await res.text() };
       }
-      const data = await res.json();
-      return { data: data, error: "Failed to update booking" };
+
+      if (!res.ok) {
+        return {
+          success: false,
+          data: null,
+          error: result.message || result.error || "Update failed",
+        };
+      }
+
+      return { success: true, data: result.data, error: null };
     } catch (error) {
-      return {
-        data: null,
-        error: "Server connection failed. Please try again.",
-      };
+      console.error("Service Error:", error);
+      return { success: false, data: null, error: "Network connection failed" };
     }
   },
 };
