@@ -6,4 +6,9 @@ export const studentRoutes: Route[] = [
     logo: AudioWaveform,
     url: "/student-dashboard/my-bookings",
   },
+  {
+    title: "My Profile",
+    logo: AudioWaveform,
+    url: "/student-dashboard/my-profile",
+  },
 ];

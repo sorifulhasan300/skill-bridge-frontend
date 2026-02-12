@@ -20,7 +20,7 @@ export function NavMain({
   items: {
     title: string;
     url: string;
-    icon?: LucideIcon;
+    logo?: LucideIcon;
     isActive?: boolean;
   }[];
 }) {
@@ -36,7 +36,7 @@ export function NavMain({
           >
             <SidebarMenuItem>
               <SidebarMenuButton tooltip={item.title}>
-                {item.icon && <item.icon />}
+                {item.logo && <item.logo />}
                 <span>{item.title}</span>
               </SidebarMenuButton>
 
