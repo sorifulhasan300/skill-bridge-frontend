@@ -32,7 +32,7 @@ export const tutorService = {
 
       const data = await res.json();
 
-      return { data, error: null };
+      return { data: data, error: null };
     } catch (error) {
       return { data: null, error: "Network error" };
     }
