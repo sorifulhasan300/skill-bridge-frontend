@@ -21,7 +21,10 @@ export const userService = {
       }
       return { data: session, error: null };
     } catch (error) {
-      return { data: null, error: "something was wrong" };
+      return {
+        data: null,
+        error: "Server connection failed. Please try again.",
+      };
     }
   },
 };

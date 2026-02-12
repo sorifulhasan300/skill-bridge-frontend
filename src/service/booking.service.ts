@@ -1,5 +1,5 @@
 import { env } from "@/env";
-import { cookies } from "next/headers"; 
+import { cookies } from "next/headers";
 
 export const bookingService = {
   getMyBookings: async () => {
@@ -21,8 +21,10 @@ export const bookingService = {
       const data = await res.json();
       return { data: data, error: null };
     } catch (error) {
-      console.error("Fetch Error:", error);
-      return { data: null, error: "Network error" };
+      return {
+        data: null,
+        error: "Server connection failed. Please try again.",
+      };
     }
   },
 };

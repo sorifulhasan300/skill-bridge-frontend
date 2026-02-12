@@ -34,7 +34,10 @@ export const tutorService = {
 
       return { data: data, error: null };
     } catch (error) {
-      return { data: null, error: "Network error" };
+      return {
+        data: null,
+        error: "Server connection failed. Please try again.",
+      };
     }
   },
 
@@ -52,7 +55,10 @@ export const tutorService = {
 
       return { data, error: null };
     } catch (error) {
-      return { data: null, error: "Network error" };
+      return {
+        data: null,
+        error: "Server connection failed. Please try again.",
+      };
     }
   },
 };
