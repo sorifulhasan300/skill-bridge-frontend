@@ -1,5 +1,10 @@
+import ProfileCard from "@/components/student-dashboard/ProfileCard";
 import React from "react";
 
 export default function MyProfile() {
-  return <div>MyProfile</div>;
+  return (
+    <div>
+      <ProfileCard></ProfileCard>
+    </div>
+  );
 }

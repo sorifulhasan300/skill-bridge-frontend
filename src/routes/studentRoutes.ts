@@ -1,14 +1,14 @@
 import { Route } from "@/types/route.types";
-import { AudioWaveform } from "lucide-react";
+import { CalendarDays, UserCircle } from "lucide-react";
 export const studentRoutes: Route[] = [
   {
     title: "My Bookings",
-    logo: AudioWaveform,
+    logo: CalendarDays,
     url: "/student-dashboard/my-bookings",
   },
   {
     title: "My Profile",
-    logo: AudioWaveform,
+    logo: UserCircle,
     url: "/student-dashboard/my-profile",
   },
 ];

@@ -3,11 +3,11 @@ import { bookingService } from "@/service/booking.service";
 import React from "react";
 
 export default async function MyBookings() {
-  const { data, error } = await bookingService.getMyBookings();
-  console.log("booking data", data);
+  const { data } = await bookingService.getMyBookings();
   return (
-    <div>
-      <BookingTable></BookingTable>
+    <div className="mt-10">
+      <h1 className="font-bold mb-4">Booking History</h1>
+      <BookingTable bookings={data?.data}></BookingTable>
     </div>
   );
 }
