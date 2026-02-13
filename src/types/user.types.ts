@@ -5,8 +5,11 @@ export enum UserStatus {
 }
 
 export type User = {
+  id: string;
   email: string;
   image: string | null;
   name: string;
+  role: string;
+  createdAt: string;
   status: UserStatus;
 };

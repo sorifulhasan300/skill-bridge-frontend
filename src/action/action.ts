@@ -1,5 +1,6 @@
 "use server";
 
+import { adminService } from "@/service/admin.service";
 import { bookingService } from "@/service/booking.service";
 import { categoryService } from "@/service/category.service";
 import { userService } from "@/service/session.service";
@@ -32,7 +33,11 @@ export const createTutorProfile = async (payload: Record<string, unknown>) => {
 };
 
 export const updateTutorProfile = async (payload: Record<string, unknown>) => {
-  console.log("payload for update profile avialavilty", payload);
   const result = await tutorService.updateTutorProfile(payload);
+  return result;
+};
+
+export const getAllUsers = async () => {
+  const result = await adminService.getAllUsers();
   return result;
 };
