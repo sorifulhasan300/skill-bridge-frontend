@@ -62,4 +62,65 @@ export const tutorService = {
       };
     }
   },
+
+  getTutorProfile: async () => {
+    try {
+      const cookiesStore = await cookies();
+      const res = await fetch(`${env.DATABASE_URL}/api/tutors/tutor/profile`, {
+        headers: {
+          Cookie: cookiesStore.toString(),
+        },
+        cache: "no-store",
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        return {
+          data: null,
+          error: result.message || "Failed to update profile",
+        };
+      }
+
+      return { data: result, error: null };
+    } catch (error) {
+      console.error("API Error:", error);
+      return {
+        data: null,
+        error: "Server connection failed. Please try again.",
+      };
+    }
+  },
+
+  updateTutorProfile: async (payload: Record<string, unknown>) => {
+    try {
+      const cookiesStore = await cookies();
+      const res = await fetch(`${env.DATABASE_URL}/api/tutors/update/profile`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookiesStore.toString(),
+        },
+        body: JSON.stringify(payload),
+        cache: "no-store",
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        return {
+          data: null,
+          error: result.message || "Failed to update profile",
+        };
+      }
+
+      return { data: result, error: null };
+    } catch (error) {
+      console.error("API Error:", error);
+      return {
+        data: null,
+        error: "Server connection failed. Please try again.",
+      };
+    }
+  },
 };

@@ -32,7 +32,7 @@ export const tutorRoutes: Route[] = [
   {
     title: "Manage Profile",
     logo: UserCog,
-    url: "/tutor-dashboard/manage-tutor-profile",
+    url: "/tutor-dashboard/tutor-profile",
   },
   {
     title: "My Profile",

@@ -48,7 +48,6 @@ export default function BookingTable({ bookings }: { bookings: Booking[] }) {
         id,
         status,
       );
-      console.log("handle booking response", error);
 
       if (success) {
         router.refresh();
