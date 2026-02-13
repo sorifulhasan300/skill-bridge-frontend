@@ -31,6 +31,7 @@ import { Booking } from "@/types/booking.typs";
 import { MoreHorizontalIcon, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { stat } from "fs";
 
 export default function BookingTable({ bookings }: { bookings: Booking[] }) {
   const router = useRouter();
@@ -40,10 +41,9 @@ export default function BookingTable({ bookings }: { bookings: Booking[] }) {
   );
   const [isPending, setIsPending] = useState(false);
 
-  const handleCancelBooking = async (id: string, status: string) => {
+  const handleComplete = async (id: string, status: string) => {
     try {
       setIsPending(true);
-
       const { data, error, success } = await updateStudentBookingStatus(
         id,
         status,
@@ -72,8 +72,12 @@ export default function BookingTable({ bookings }: { bookings: Booking[] }) {
           <TableRow>
             <TableHead>Amount</TableHead>
             <TableHead>Status</TableHead>
+            <TableHead>Student Name</TableHead>
+            <TableHead>Student Email</TableHead>
+
             <TableHead>Session Start</TableHead>
             <TableHead>Session End</TableHead>
+
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -94,6 +98,12 @@ export default function BookingTable({ bookings }: { bookings: Booking[] }) {
                   >
                     {booking.status}
                   </span>
+                </TableCell>
+                <TableCell className="font-medium">
+                  {booking.student.name}
+                </TableCell>
+                <TableCell className="font-medium">
+                  {booking.student.email}
                 </TableCell>
                 <TableCell>
                   {new Date(booking.startTime).toLocaleDateString()}
@@ -118,7 +128,7 @@ export default function BookingTable({ bookings }: { bookings: Booking[] }) {
                           setIsAlertOpen(true);
                         }}
                       >
-                        Cancel Booking
+                        Complete session
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -151,17 +161,17 @@ export default function BookingTable({ bookings }: { bookings: Booking[] }) {
               onClick={(e) => {
                 e.preventDefault();
                 if (selectedBookingId)
-                  handleCancelBooking(selectedBookingId, "CANCELED");
+                  handleComplete(selectedBookingId, "COMPLETED");
               }}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               {isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Cancelling...
+                  Completing...
                 </>
               ) : (
-                "Yes, Cancel Booking"
+                "Yes, Complete Booking"
               )}
             </AlertDialogAction>
           </AlertDialogFooter>

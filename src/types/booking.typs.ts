@@ -8,4 +8,8 @@ export interface Booking {
   endTime: string;
   createdAt: string;
   updatedAt: string;
+  student: {
+    name: string;
+    email: string;
+  };
 }

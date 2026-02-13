@@ -1,5 +1,6 @@
 "use server";
 
+import { bookingService } from "@/service/booking.service";
 import { categoryService } from "@/service/category.service";
 import { userService } from "@/service/session.service";
 import { studentService } from "@/service/student.service";
@@ -13,8 +14,11 @@ export const getTutorDetailsById = async (id: string) => {
   return await tutorService.getTutorById(id);
 };
 
-export const updateStudentBookingStatus = async (id: string) => {
-  const result = await studentService.updateBooking(id);
+export const updateStudentBookingStatus = async (
+  id: string,
+  status: string,
+) => {
+  const result = await bookingService.updateBooking(id, status);
   return result;
 };
 
