@@ -37,6 +37,7 @@ import { Roles } from "@/constants/constants";
 import { Spinner } from "../ui/spinner";
 import { getSession } from "@/action/action";
 import { Session } from "@/types/session.type";
+import { useAuth } from "@/context/auth-context";
 
 interface MenuItem {
   title: string;
@@ -96,29 +97,10 @@ const Navbar = ({
   },
   className,
 }: Navbar1Props) => {
-  const [session, setSession] = useState<Session | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
   const router = useRouter();
-  useEffect(() => {
-    const fetchSession = async () => {
-      try {
-        const { data, error } = await getSession();
-        if (error) {
-          setError(error);
-        } else {
-          setSession(data);
-        }
-      } catch (err) {
-        setError(err as string);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSession();
-  }, []);
+  const { session, isLoading } = useAuth();
   const role = session?.user?.role;
+
   console.log(role);
   return (
     <section className={cn("py-4", className)}>
@@ -149,7 +131,7 @@ const Navbar = ({
           </div>
           <div className="flex gap-2">
             <ModeToggle />
-            {loading ? (
+            {isLoading ? (
               <>
                 <div className="mt-2">
                   <Spinner />

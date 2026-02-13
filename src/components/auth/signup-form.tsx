@@ -26,6 +26,7 @@ const formSchema = z.object({
   name: z.string("").min(5, "password must be at least 5 characters."),
   password: z.string("").min(5, "password must be at least 5 characters."),
   email: z.email(),
+  image: z.string(),
   role: z.enum(["STUDENT", "TUTOR"]),
 });
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
@@ -35,6 +36,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
       name: "",
       role: "",
       email: "",
+      image: "",
       password: "",
     },
     validators: {
@@ -162,6 +164,29 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       placeholder="*********"
+                      autoComplete="off"
+                    />
+                    {isInvalid && (
+                      <FieldError errors={field.state.meta.errors} />
+                    )}
+                  </Field>
+                );
+              }}
+            </form.Field>
+            <form.Field name="image">
+              {(field) => {
+                const isInvalid =
+                  field.state.meta.isTouched && !field.state.meta.isValid;
+                return (
+                  <Field data-invalid={isInvalid}>
+                    <FieldLabel htmlFor="password">Email</FieldLabel>
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      placeholder="Profile Image url"
                       autoComplete="off"
                     />
                     {isInvalid && (

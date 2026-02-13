@@ -24,6 +24,7 @@ import { useForm } from "@tanstack/react-form";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
+import { useAuth } from "@/context/auth-context";
 const formSchema = z.object({
   password: z.string("").min(5, "password must be at least 5 characters."),
   email: z.email(),
@@ -32,6 +33,8 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const { refreshAuth } = useAuth();
+
   const router = useRouter();
   const form = useForm({
     defaultValues: {
@@ -50,6 +53,7 @@ export function LoginForm({
           return;
         }
         toast.success("Login Successfully", { id: toastId });
+        await refreshAuth();
         router.push("/");
       } catch (error) {
         toast.error("Something was wrong", { id: toastId });
