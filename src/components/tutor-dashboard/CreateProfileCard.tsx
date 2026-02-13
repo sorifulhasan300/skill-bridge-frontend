@@ -8,7 +8,13 @@ import { toast } from "sonner";
 import { X, Search, Check } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import {
   Field,
   FieldError,
@@ -32,38 +38,26 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { getCategories } from "@/action/action";
+import { createTutorProfile, getCategories } from "@/action/action";
 
 /* ===============================
-   ZOD SCHEMA
+    ZOD SCHEMA
 ================================ */
-const slotSchema = z.object({
-  id: z.string(),
-  start: z.string().min(1, "Required"),
-  end: z.string().min(1, "Required"),
-  booked: z.boolean().default(false),
-});
-
 const profileSchema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters"),
   bio: z.string().min(20, "Bio must be at least 20 characters"),
-  hourlyRate: z.number().min(1, "Rate must be at least 1 BDT"),
+  hourlyRate: z.number().min(3, "Rate must be at least 3 BDT"),
+  experience: z.number().min(1, "Experience must be at least 1 number"),
   categories: z.array(z.string()).min(1, "Select at least one category"),
-  timeSlots: z.record(z.array(slotSchema)).optional(),
 });
 
 type FormValues = z.infer<typeof profileSchema>;
 
-const days = ["sat", "sun", "mon", "tue", "wed", "thu", "fri"];
-
-/* ===============================
-   COMPONENT
-================================ */
 export default function CreateProfile() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [categories, setCategories] = useState<{ id: string; name: string }[]>(
-    [],
-  );
+  const [availableCategories, setAvailableCategories] = useState<
+    { id: string; name: string }[]
+  >([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -72,29 +66,31 @@ export default function CreateProfile() {
       title: "",
       bio: "",
       hourlyRate: 0,
+      experience: 0,
       categories: [],
-      timeSlots: days.reduce((acc, day) => ({ ...acc, [day]: [] }), {}),
     } as FormValues,
-    validatorAdapter: zodValidator(),
     validators: {
       onSubmit: profileSchema,
     },
     onSubmit: async ({ value }) => {
-      console.log("FORM SUBMITTED SUCCESSFULLY:", value);
-      toast.success("Profile Created Successfully!");
-    },
-    onSubmitInvalid: ({ formApi }) => {
-      console.error("Form Validation Failed:", formApi.state.fieldMeta);
-      toast.error("Please fix the errors in the form.");
+      const toastId = toast.loading("Publishing profile...");
+
+      const { data, error } = await createTutorProfile(value);
+      if (error) {
+        toast.error(error, { id: toastId });
+        return;
+      }
+      toast.success("Profile Publish Successfully!", { id: toastId });
     },
   });
 
+  // Fetch Categories logic
   useEffect(() => {
     const fetchCategories = async () => {
       setLoading(true);
       try {
         const { data } = await getCategories(searchTerm);
-        setCategories(data?.data || []);
+        setAvailableCategories(data?.data || []);
       } catch (error) {
         console.error("Fetch error:", error);
       } finally {
@@ -106,12 +102,17 @@ export default function CreateProfile() {
   }, [searchTerm]);
 
   return (
-    <Card className="max-w-5xl mx-auto mt-8 mb-12 shadow-lg">
-      <CardHeader className="border-b bg-muted/20">
-        <CardTitle className="text-2xl">Create Tutor Profile</CardTitle>
+    <Card className="max-w-4xl mx-auto mt-10 mb-12 shadow-md">
+      <CardHeader className="border-b bg-slate-50/50">
+        <CardTitle className="text-2xl font-bold">
+          Create Tutor Profile
+        </CardTitle>
+        <CardDescription>
+          Setup your tutoring expertise and hourly rates.
+        </CardDescription>
       </CardHeader>
 
-      <CardContent className="pt-6">
+      <CardContent className="pt-8">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -119,87 +120,106 @@ export default function CreateProfile() {
             form.handleSubmit();
           }}
         >
-          <FieldGroup className="space-y-6">
-            {/* TITLE */}
-            <form.Field name="title">
-              {(field) => (
-                <Field>
-                  <FieldLabel>Profile Title</FieldLabel>
-                  <Input
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    placeholder="e.g., Expert Math & Physics Tutor"
-                  />
-                  <FieldError errors={field.state.meta.errors} />
-                </Field>
-              )}
-            </form.Field>
+          <FieldGroup className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* TITLE */}
+              <form.Field name="title">
+                {(field) => (
+                  <Field className="md:col-span-2">
+                    <FieldLabel>Profile Title</FieldLabel>
+                    <Input
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      placeholder="e.g., Professional English & Mathematics Tutor"
+                    />
+                    <FieldError errors={field.state.meta.errors} />
+                  </Field>
+                )}
+              </form.Field>
 
-            {/* BIO */}
-            <form.Field name="bio">
-              {(field) => (
-                <Field>
-                  <FieldLabel>Biography</FieldLabel>
-                  <Textarea
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    placeholder="Describe your teaching style..."
-                    rows={4}
-                  />
-                  <FieldError errors={field.state.meta.errors} />
-                </Field>
-              )}
-            </form.Field>
-
-            {/* HOURLY RATE */}
-            <form.Field name="hourlyRate">
-              {(field) => (
-                <Field>
-                  <FieldLabel>Hourly Rate (BDT)</FieldLabel>
-                  <Input
-                    type="number"
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(Number(e.target.value))}
-                  />
-                  <FieldError errors={field.state.meta.errors} />
-                </Field>
-              )}
-            </form.Field>
-
-            {/* CATEGORIES */}
+              {/* HOURLY RATE */}
+              <form.Field name="hourlyRate">
+                {(field) => (
+                  <Field>
+                    <FieldLabel>Hourly Rate (BDT)</FieldLabel>
+                    <Input
+                      type="number"
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) =>
+                        field.handleChange(Number(e.target.value))
+                      }
+                    />
+                    <FieldError errors={field.state.meta.errors} />
+                  </Field>
+                )}
+              </form.Field>
+              <form.Field name="experience">
+                {(field) => (
+                  <Field>
+                    <FieldLabel>Hourly Rate (BDT)</FieldLabel>
+                    <Input
+                      type="number"
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) =>
+                        field.handleChange(Number(e.target.value))
+                      }
+                    />
+                    <FieldError errors={field.state.meta.errors} />
+                  </Field>
+                )}
+              </form.Field>
+              {/* CATEGORIES */}
+            </div>
             <form.Field name="categories">
               {(field) => (
                 <Field>
-                  <FieldLabel>Subjects / Categories</FieldLabel>
-                  <div className="flex flex-wrap gap-2 mb-2">
-                    {field.state.value.map((catId) => (
-                      <Badge key={catId} variant="secondary">
-                        {categories.find((c) => c.id === catId)?.name ||
-                          "Loading..."}
-                        <X
-                          className="ml-2 h-3 w-3 cursor-pointer"
-                          onClick={() =>
-                            field.handleChange(
-                              field.state.value.filter((id) => id !== catId),
-                            )
-                          }
-                        />
-                      </Badge>
-                    ))}
+                  <FieldLabel>Subjects</FieldLabel>
+
+                  {/* Selected Badges */}
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {field.state.value.map((catId) => {
+                      const catName =
+                        availableCategories.find((c) => c.id === catId)?.name ||
+                        "Selected";
+                      return (
+                        <Badge
+                          key={catId}
+                          variant="secondary"
+                          className="pl-2 pr-1 py-1 flex items-center gap-1"
+                        >
+                          {catName}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              field.handleChange(
+                                field.state.value.filter((id) => id !== catId),
+                              );
+                            }}
+                            className="hover:bg-slate-200 rounded-full p-0.5 transition-colors"
+                          >
+                            <X className="h-3 w-3" />
+                          </button>
+                        </Badge>
+                      );
+                    })}
                   </div>
+
+                  {/* Search Popover */}
                   <Popover open={open} onOpenChange={setOpen}>
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
-                        className="w-full justify-start text-muted-foreground"
+                        className="w-full justify-between text-muted-foreground font-normal"
                       >
-                        <Search className="mr-2 h-4 w-4" /> Select subjects...
+                        <span className="flex items-center">
+                          <Search className="mr-2 h-4 w-4" /> Search subjects...
+                        </span>
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-[400px] p-0" align="start">
+                    <PopoverContent className="w-[350px] p-0" align="start">
                       <Command>
                         <CommandInput
                           placeholder="Search..."
@@ -207,32 +227,35 @@ export default function CreateProfile() {
                         />
                         <CommandList>
                           <CommandEmpty>
-                            {loading ? "Searching..." : "No results"}
+                            {loading ? "Searching..." : "No subjects found."}
                           </CommandEmpty>
                           <CommandGroup>
-                            {categories.map((cat) => (
-                              <CommandItem
-                                key={cat.id}
-                                onSelect={() => {
-                                  const current = field.state.value;
-                                  field.handleChange(
-                                    current.includes(cat.id)
-                                      ? current.filter((id) => id !== cat.id)
-                                      : [...current, cat.id],
-                                  );
-                                }}
-                              >
-                                <Check
-                                  className={cn(
-                                    "mr-2 h-4 w-4",
-                                    field.state.value.includes(cat.id)
-                                      ? "opacity-100"
-                                      : "opacity-0",
-                                  )}
-                                />
-                                {cat.name}
-                              </CommandItem>
-                            ))}
+                            {availableCategories.map((cat) => {
+                              const isSelected = field.state.value.includes(
+                                cat.id,
+                              );
+                              return (
+                                <CommandItem
+                                  key={cat.id}
+                                  onSelect={() => {
+                                    const nextValue = isSelected
+                                      ? field.state.value.filter(
+                                          (id) => id !== cat.id,
+                                        ) // Deselect
+                                      : [...field.state.value, cat.id]; // Select
+                                    field.handleChange(nextValue);
+                                  }}
+                                >
+                                  <Check
+                                    className={cn(
+                                      "mr-2 h-4 w-4",
+                                      isSelected ? "opacity-100" : "opacity-0",
+                                    )}
+                                  />
+                                  {cat.name}
+                                </CommandItem>
+                              );
+                            })}
                           </CommandGroup>
                         </CommandList>
                       </Command>
@@ -242,111 +265,20 @@ export default function CreateProfile() {
                 </Field>
               )}
             </form.Field>
-
-            {/* TIME SLOTS */}
-            <form.Field name="timeSlots">
+            {/* BIO */}
+            <form.Field name="bio">
               {(field) => (
-                <div className="space-y-4 pt-4 border-t">
-                  <FieldLabel className="text-lg">
-                    Weekly Availability
-                  </FieldLabel>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {days.map((day) => (
-                      <div
-                        key={day}
-                        className="p-3 border rounded-lg bg-slate-50"
-                      >
-                        <div className="flex justify-between items-center mb-2">
-                          <span className="font-bold uppercase text-xs text-slate-500">
-                            {day}
-                          </span>
-                          <Button
-                            type="button"
-                            size="sm"
-                            variant="ghost"
-                            className="h-7 text-primary"
-                            onClick={() => {
-                              const currentSlots =
-                                field.state.value?.[day] || [];
-                              field.handleChange({
-                                ...field.state.value,
-                                [day]: [
-                                  ...currentSlots,
-                                  {
-                                    id: crypto.randomUUID(),
-                                    start: "09:00",
-                                    end: "10:00",
-                                    booked: false,
-                                  },
-                                ],
-                              });
-                            }}
-                          >
-                            + Add
-                          </Button>
-                        </div>
-                        <div className="space-y-2">
-                          {(field.state.value?.[day] || []).map(
-                            (slot, index) => (
-                              <div
-                                key={slot.id}
-                                className="flex items-center gap-2 bg-white p-2 rounded border shadow-sm"
-                              >
-                                <Input
-                                  type="time"
-                                  className="h-8 text-xs px-1"
-                                  value={slot.start}
-                                  onChange={(e) => {
-                                    const updated = [
-                                      ...field.state.value![day],
-                                    ];
-                                    updated[index].start = e.target.value;
-                                    field.handleChange({
-                                      ...field.state.value,
-                                      [day]: updated,
-                                    });
-                                  }}
-                                />
-                                <Input
-                                  type="time"
-                                  className="h-8 text-xs px-1"
-                                  value={slot.end}
-                                  onChange={(e) => {
-                                    const updated = [
-                                      ...field.state.value![day],
-                                    ];
-                                    updated[index].end = e.target.value;
-                                    field.handleChange({
-                                      ...field.state.value,
-                                      [day]: updated,
-                                    });
-                                  }}
-                                />
-                                <Button
-                                  type="button"
-                                  variant="ghost"
-                                  size="sm"
-                                  className="h-8 text-destructive"
-                                  onClick={() => {
-                                    const updated = field.state.value![
-                                      day
-                                    ].filter((s) => s.id !== slot.id);
-                                    field.handleChange({
-                                      ...field.state.value,
-                                      [day]: updated,
-                                    });
-                                  }}
-                                >
-                                  <X className="h-4 w-4" />
-                                </Button>
-                              </div>
-                            ),
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <Field>
+                  <FieldLabel>Biography</FieldLabel>
+                  <Textarea
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    placeholder="Describe your teaching experience, qualifications, and methods..."
+                    rows={6}
+                  />
+                  <FieldError errors={field.state.meta.errors} />
+                </Field>
               )}
             </form.Field>
 
@@ -356,11 +288,11 @@ export default function CreateProfile() {
             >
               {([canSubmit, isSubmitting]) => (
                 <Button
+                  className="cursor-pointer"
                   type="submit"
-                  className="w-full h-12 text-lg"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? "Publishing..." : "Publish Profile"}
+                  {isSubmitting ? "Creating..." : "Publish Profile"}
                 </Button>
               )}
             </form.Subscribe>

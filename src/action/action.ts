@@ -26,6 +26,11 @@ export const getCategories = async (searchTerm: string) => {
   const result = await categoryService.getCategories(searchTerm);
   return result;
 };
+export const createTutorProfile = async (payload: Record<string, unknown>) => {
+  const result = await tutorService.createTutorProfile(payload);
+  return result;
+};
+
 export const updateTutorProfile = async (payload: Record<string, unknown>) => {
   const result = await tutorService.updateTutorProfile(payload);
   return result;

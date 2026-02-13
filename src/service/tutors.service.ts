@@ -123,4 +123,36 @@ export const tutorService = {
       };
     }
   },
+
+  createTutorProfile: async (payload: Record<string, unknown>) => {
+    try {
+      const cookiesStore = await cookies();
+      const res = await fetch(`${env.DATABASE_URL}/api/tutors/create-profile`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookiesStore.toString(),
+        },
+        body: JSON.stringify(payload),
+        cache: "no-store",
+      });
+
+      const result = await res.json();
+      console.log(result);
+
+      if (!res.ok) {
+        return {
+          data: null,
+          error: result.message || "Failed to create profile",
+        };
+      }
+
+      return { data: result, error: null };
+    } catch (error) {
+      return {
+        data: null,
+        error: "Server connection failed. Please try again.",
+      };
+    }
+  },
 };
