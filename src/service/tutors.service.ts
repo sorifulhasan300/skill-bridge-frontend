@@ -93,6 +93,7 @@ export const tutorService = {
   },
 
   updateTutorProfile: async (payload: Record<string, unknown>) => {
+    console.log("in the update profile ", payload);
     try {
       const cookiesStore = await cookies();
       const res = await fetch(`${env.DATABASE_URL}/api/tutors/update/profile`, {

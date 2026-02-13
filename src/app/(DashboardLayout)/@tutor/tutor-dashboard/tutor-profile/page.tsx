@@ -4,10 +4,11 @@ import React from "react";
 
 export default async function page() {
   const { data } = await tutorService.getTutorProfile();
-  console.log(data);
   return (
     <div>
-      <UpdateTutorProfile initialData={data.data}></UpdateTutorProfile>
+      <UpdateTutorProfile
+        initialData={data.data.timeSlots}
+      ></UpdateTutorProfile>
     </div>
   );
 }

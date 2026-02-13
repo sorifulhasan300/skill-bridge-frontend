@@ -32,6 +32,7 @@ export const createTutorProfile = async (payload: Record<string, unknown>) => {
 };
 
 export const updateTutorProfile = async (payload: Record<string, unknown>) => {
+  console.log("payload for update profile avialavilty", payload);
   const result = await tutorService.updateTutorProfile(payload);
   return result;
 };
