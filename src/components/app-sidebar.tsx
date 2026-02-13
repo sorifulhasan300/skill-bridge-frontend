@@ -12,13 +12,13 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import Logo from "./logo";
 import { Session } from "@/types/session.type";
 import { Route } from "@/types/route.types";
 import { Roles } from "@/constants/constants";
 import { adminRoutes } from "@/routes/adminRoutes";
 import { tutorRoutes } from "@/routes/tutorRoutes";
 import { studentRoutes } from "@/routes/studentRoutes";
+import { Logo } from "./logo";
 
 // This is sample data.
 const data = {
@@ -68,7 +68,7 @@ export function AppSidebar({
   }
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
+      <SidebarHeader className="mt-6">
         <Logo />
       </SidebarHeader>
       <SidebarContent>

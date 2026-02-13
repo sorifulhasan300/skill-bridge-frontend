@@ -11,23 +11,31 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Roles } from "@/constants/constants";
+import { useAuth } from "@/context/auth-context";
+import { authClient } from "@/lib/auth-client";
 import { logout } from "@/service/logout.service";
 import { BadgeCheckIcon, LogOutIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 export function DropdownMenuAvatar() {
-  const [session, setSession] = useState(null);
-
-  useEffect(() => {
-    (async () => {
-      const { data, error } = getSession();
-      setSession(data);
-    })();
-  }, []);
+  const { session, refreshAuth } = useAuth();
   const router = useRouter();
-
   const role = session?.user?.role;
-
+  const handleSignOut = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: async () => {
+          toast.success("Signed out successfully");
+          router.push("/login");
+          await refreshAuth();
+        },
+        onError: (ctx) => {
+          toast.error(ctx.error.message || "Something went wrong");
+        },
+      },
+    });
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -53,7 +61,7 @@ export function DropdownMenuAvatar() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={logout}>
+        <DropdownMenuItem onClick={handleSignOut}>
           <LogOutIcon />
           Sign Out
         </DropdownMenuItem>

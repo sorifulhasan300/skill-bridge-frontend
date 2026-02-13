@@ -1,10 +1,42 @@
 import { Route } from "@/types/route.types";
-import { AudioWaveform } from "lucide-react";
+import {
+  CalendarCheck,
+  UserPlus,
+  UserCog,
+  UserCircle,
+  Clock,
+  LayoutDashboard,
+} from "lucide-react";
 
 export const tutorRoutes: Route[] = [
   {
-    title: "Add Blog",
-    logo: AudioWaveform,
-    url: "/admin-dashboard/add-blog",
+    title: "Dashboard", // Main Home page
+    logo: LayoutDashboard,
+    url: "/tutor-dashboard", // Root of your dashboard
+  },
+  {
+    title: "Bookings",
+    logo: CalendarCheck,
+    url: "/tutor-dashboard/manage-booking",
+  },
+  {
+    title: "Set Availability",
+    logo: Clock,
+    url: "/tutor-dashboard/set-availability",
+  },
+  {
+    title: "Create Profile",
+    logo: UserPlus,
+    url: "/tutor-dashboard/create-profile",
+  },
+  {
+    title: "Manage Profile",
+    logo: UserCog,
+    url: "/tutor-dashboard/manage-tutor-profile",
+  },
+  {
+    title: "My Profile",
+    logo: UserCircle,
+    url: "/tutor-dashboard/my-profile",
   },
 ];
