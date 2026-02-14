@@ -5,6 +5,7 @@ import { bookingService } from "@/service/booking.service";
 import { categoryService } from "@/service/category.service";
 import { userService } from "@/service/session.service";
 import { tutorService } from "@/service/tutors.service";
+import { BookingPayload } from "@/types/booking.typs";
 import { UserStatus } from "@/types/user.types";
 
 export const getSession = async () => {
@@ -64,5 +65,10 @@ export const updateCategory = async (
 ) => {
   console.log(updatedPayload, id);
   const result = await categoryService.updateCategoryData(id, updatedPayload);
+  return result;
+};
+
+export const createBooking = async (BookingPayload: BookingPayload) => {
+  const result = await bookingService.CreateBooking(BookingPayload);
   return result;
 };

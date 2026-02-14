@@ -1,4 +1,5 @@
 import { env } from "@/env";
+import { BookingPayload } from "@/types/booking.typs";
 import { cookies } from "next/headers";
 
 export const bookingService = {
@@ -114,6 +115,43 @@ export const bookingService = {
     } catch (error) {
       console.error("Service Error:", error);
       return { success: false, data: null, error: "Network connection failed" };
+    }
+  },
+
+  CreateBooking: async (payload: BookingPayload) => {
+    const cookieStore = await cookies();
+    const Cookies = cookieStore.toString();
+    try {
+      const response = await fetch(`${env.DATABASE_URL}/api/bookings`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: Cookies,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return {
+          success: false,
+          message: null,
+          error: data.message || "Booking Failed!",
+        };
+      }
+
+      return {
+        success: true,
+        message: "Booking confirmed!",
+        error: null,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: null,
+        error: "Network connection failed",
+      };
     }
   },
 };

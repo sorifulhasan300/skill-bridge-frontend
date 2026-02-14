@@ -13,3 +13,12 @@ export interface Booking {
     email: string;
   };
 }
+
+export type BookingPayload = {
+  tutorId: string;
+  studentId: string;
+  day: string; 
+  slotId: string;
+  startTime: string; 
+  endTime: string; 
+};
