@@ -4,7 +4,6 @@ import { adminService } from "@/service/admin.service";
 import { bookingService } from "@/service/booking.service";
 import { categoryService } from "@/service/category.service";
 import { userService } from "@/service/session.service";
-import { studentService } from "@/service/student.service";
 import { tutorService } from "@/service/tutors.service";
 import { UserStatus } from "@/types/user.types";
 
@@ -45,5 +44,25 @@ export const getAllUsers = async () => {
 
 export const updateUserStatus = async (id: string, status: UserStatus) => {
   const result = await adminService.updateUserStatus(id, status);
+  return result;
+};
+
+export const createCategory = async (formData: {
+  name: string;
+  icon: string;
+}) => {
+  const result = await categoryService.createCategory(formData);
+  return result;
+};
+
+export const updateCategory = async (
+  id: string,
+  updatedPayload: {
+    name: string;
+    icon: string;
+  },
+) => {
+  console.log(updatedPayload, id);
+  const result = await categoryService.updateCategoryData(id, updatedPayload);
   return result;
 };
