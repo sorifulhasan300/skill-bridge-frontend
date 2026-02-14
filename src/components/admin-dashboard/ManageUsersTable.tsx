@@ -1,11 +1,14 @@
 "use client";
-import { User } from "@/types/user.types";
+
+import { User, UserStatus } from "@/types/user.types";
 import React, { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import {
   Table,
@@ -26,25 +29,61 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "../ui/button";
-import { Loader2, MoreHorizontalIcon } from "lucide-react";
+import {
+  Loader2,
+  MoreHorizontalIcon,
+  ShieldCheck,
+  ShieldAlert,
+  UserX,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { toast } from "sonner";
+import { cn } from "@/lib/utils";
+import { updateUserStatus } from "@/action/action";
+
 export default function ManageUsersTable({ users }: { users: User[] }) {
+  console.log(users);
   const router = useRouter();
   const [isAlertOpen, setIsAlertOpen] = useState(false);
-  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [selectedUser, setSelectedUser] = useState<{
+    id: string;
+    status: string;
+  } | null>(null);
   const [isPending, setIsPending] = useState(false);
 
-  const handleCancelBooking = (id: string, status: string) => {};
+  const handleUpdateStatus = async (id: string, newStatus: UserStatus) => {
+    setIsPending(true);
+    const toastId = toast.loading("Updating user....");
+
+    try {
+      const res = await updateUserStatus(id, newStatus);
+
+      if (res.error) {
+        toast.error(res.error, { id: toastId });
+      } else {
+        toast.success(`User is now ${newStatus}`, { id: toastId });
+
+        router.refresh();
+      }
+    } catch (error) {
+      toast.error("Something went wrong", { id: toastId });
+    } finally {
+      setIsPending(false);
+      setIsAlertOpen(false);
+      setSelectedUser(null);
+    }
+  };
+
   return (
-    <div className="border rounded-md ">
+    <div className="border rounded-md bg-white">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Profile</TableHead>
+            <TableHead className="w-[80px]">Profile</TableHead>
             <TableHead>Name</TableHead>
-            <TableHead>Status</TableHead>
             <TableHead>Email</TableHead>
+            <TableHead>Status</TableHead>
             <TableHead>Role</TableHead>
             <TableHead>Joined</TableHead>
             <TableHead className="text-right">Actions</TableHead>
@@ -54,32 +93,40 @@ export default function ManageUsersTable({ users }: { users: User[] }) {
           {users?.length > 0 ? (
             users.map((user) => (
               <TableRow key={user.id}>
-                <Avatar className="">
-                  <AvatarImage src={user.image || ""} alt="shadcn" />
-                  <AvatarFallback>LR</AvatarFallback>
-                </Avatar>
-                <TableCell className="font-medium">{user.name} Taka</TableCell>
+                <TableCell>
+                  <Avatar className="h-9 w-9">
+                    <AvatarImage src={user.image || ""} alt={user.name} />
+                    <AvatarFallback>
+                      {user.name?.charAt(0) || "U"}
+                    </AvatarFallback>
+                  </Avatar>
+                </TableCell>
+                <TableCell className="font-medium">{user.name}</TableCell>
+                <TableCell>{user.email}</TableCell>
                 <TableCell>
                   <span
-                    className={
-                      user.status === "ACTIVE"
-                        ? "text-green-600 font-semibold"
-                        : "text-yellow-600 font-semibold"
-                    }
+                    className={cn(
+                      "px-2 py-1 rounded-full text-xs font-bold",
+                      user.status === "ACTIVE" && "bg-green-100 text-green-700",
+                      user.status === "INACTIVE" &&
+                        "bg-yellow-100 text-yellow-700",
+                      user.status === "BLOCKED" && "bg-red-100 text-red-700",
+                    )}
                   >
                     {user.status}
                   </span>
                 </TableCell>
-                <TableCell className="font-medium">{user.email} </TableCell>
-                <TableCell className="font-medium">{user.role} </TableCell>
-                <TableCell className="font-medium">
-                  <span>
-                    {new Date(user.createdAt).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
+                <TableCell>
+                  <span className="capitalize text-slate-600">
+                    {user.role.toLowerCase()}
                   </span>
+                </TableCell>
+                <TableCell className="text-slate-500">
+                  {new Date(user.createdAt).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })}
                 </TableCell>
 
                 <TableCell className="text-right">
@@ -87,18 +134,50 @@ export default function ManageUsersTable({ users }: { users: User[] }) {
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon" className="size-8">
                         <MoreHorizontalIcon className="size-4" />
-                        <span className="sr-only">Open menu</span>
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
+                    <DropdownMenuContent align="end" className="w-40">
+                      <DropdownMenuLabel>Update Status</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+
+                      {/* Active Button */}
                       <DropdownMenuItem
-                        className="text-destructive focus:text-destructive"
+                        onClick={() =>
+                          handleUpdateStatus(user.id, UserStatus.ACTIVE)
+                        }
+                        disabled={user.status === "ACTIVE"}
+                        className="cursor-pointer"
+                      >
+                        <ShieldCheck className="mr-2 h-4 w-4 text-green-600" />
+                        <span>Set Active</span>
+                      </DropdownMenuItem>
+
+                      {/* Inactive Button */}
+                      <DropdownMenuItem
+                        onClick={() =>
+                          handleUpdateStatus(user.id, UserStatus.INACTIVE)
+                        }
+                        disabled={user.status === "INACTIVE"}
+                        className="cursor-pointer"
+                      >
+                        <ShieldAlert className="mr-2 h-4 w-4 text-yellow-600" />
+                        <span>Set Inactive</span>
+                      </DropdownMenuItem>
+
+                      {/* Block Button */}
+                      <DropdownMenuItem
+                        className="text-destructive focus:text-destructive cursor-pointer"
                         onSelect={() => {
-                          setSelectedUserId(user.id);
+                          setSelectedUser({
+                            id: user.id,
+                            status: UserStatus.BLOCKED,
+                          });
                           setIsAlertOpen(true);
                         }}
+                        disabled={user.status === "BLOCKED"}
                       >
-                        Cancel Booking
+                        <UserX className="mr-2 h-4 w-4" />
+                        <span>Block User</span>
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -107,41 +186,41 @@ export default function ManageUsersTable({ users }: { users: User[] }) {
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={5} className="h-24 text-center">
-                No bookings found.
+              <TableCell colSpan={7} className="h-24 text-center">
+                No users found.
               </TableCell>
             </TableRow>
           )}
         </TableBody>
       </Table>
 
+      {/* Confirmation for Blocking */}
       <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogTitle>
+              Are you sure you want to block this user?
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently cancel your
-              scheduled session.
+              Blocking a user will restrict their access to the platform. You
+              can unblock them later by setting their status to Active.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isPending}>Close</AlertDialogCancel>
+            <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
             <AlertDialogAction
               disabled={isPending}
               onClick={(e) => {
                 e.preventDefault();
-                if (selectedUserId)
-                  handleCancelBooking(selectedUserId, "CANCELED");
+                if (selectedUser)
+                  handleUpdateStatus(selectedUser.id, UserStatus.BLOCKED);
               }}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              className="bg-red-600 hover:bg-red-700"
             >
               {isPending ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Cancelling...
-                </>
+                <Loader2 className="animate-spin" />
               ) : (
-                "Yes, Cancel Booking"
+                "Confirm Block"
               )}
             </AlertDialogAction>
           </AlertDialogFooter>

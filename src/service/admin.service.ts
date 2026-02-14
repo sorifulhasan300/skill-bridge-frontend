@@ -1,4 +1,5 @@
 import { env } from "@/env";
+import { UserStatus } from "@/types/user.types";
 import { cookies } from "next/headers";
 export const adminService = {
   getAllUsers: async () => {
@@ -33,7 +34,7 @@ export const adminService = {
       };
     }
   },
-  updateUser: async (id: string, status: string) => {
+  updateUserStatus: async (id: string, newStatus: UserStatus) => {
     try {
       const cookieStore = await cookies();
       const allCookies = cookieStore.toString();
@@ -44,6 +45,8 @@ export const adminService = {
           "Content-Type": "application/json",
           Cookie: allCookies,
         },
+
+        body: JSON.stringify({ status: newStatus }),
       });
 
       const result = await res.json();

@@ -6,6 +6,7 @@ import { categoryService } from "@/service/category.service";
 import { userService } from "@/service/session.service";
 import { studentService } from "@/service/student.service";
 import { tutorService } from "@/service/tutors.service";
+import { UserStatus } from "@/types/user.types";
 
 export const getSession = async () => {
   return await userService.getSession();
@@ -39,5 +40,10 @@ export const updateTutorProfile = async (payload: Record<string, unknown>) => {
 
 export const getAllUsers = async () => {
   const result = await adminService.getAllUsers();
+  return result;
+};
+
+export const updateUserStatus = async (id: string, status: UserStatus) => {
+  const result = await adminService.updateUserStatus(id, status);
   return result;
 };
