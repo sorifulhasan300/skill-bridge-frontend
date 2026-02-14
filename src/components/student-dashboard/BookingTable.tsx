@@ -31,10 +31,14 @@ import { Booking } from "@/types/booking.typs";
 import { MoreHorizontalIcon, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { ReviewDialog } from "./ReviewDialog";
 
 export default function BookingTable({ bookings }: { bookings: Booking[] }) {
   const router = useRouter();
   const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [isReviewOpen, setIsReviewOpen] = useState(false);
+  const [activeBooking, setActiveBooking] = useState<Booking | null>(null);
+
   const [selectedBookingId, setSelectedBookingId] = useState<string | null>(
     null,
   );
@@ -97,6 +101,24 @@ export default function BookingTable({ bookings }: { bookings: Booking[] }) {
       });
     }
   };
+
+  const handleLeaveClick = (booking: Booking) => {
+    setActiveBooking(booking);
+    setIsReviewOpen(true);
+  };
+  const onReviewSubmit = async (reviewData: {
+    rating: number;
+    comment: string;
+  }) => {
+    const payload = {
+      tutorId: activeBooking?.tutorId,
+      studentId: activeBooking?.studentId,
+      comment: reviewData.comment,
+      rating: reviewData.rating,
+    };
+    console.log("Submitting Review Payload:", payload);
+    toast.success("Review submitted and session ended.");
+  };
   return (
     <div className="border rounded-md m-4">
       <Table>
@@ -148,18 +170,27 @@ export default function BookingTable({ bookings }: { bookings: Booking[] }) {
                       >
                         Cancel Booking
                       </DropdownMenuItem>
-                      <DropdownMenuItem
-                        className="text-green-500"
-                        onSelect={() => {
-                          handleAttending(booking.id, booking.studentAttend);
-                          setSelectedBookingId(booking.id);
-                        }}
-                      >
-                        Attend
-                      </DropdownMenuItem>
-                      <DropdownMenuItem className="text-green-500">
-                        Leave
-                      </DropdownMenuItem>
+                      {booking.status === "CONFIRMED" && (
+                        <>
+                          {!booking.studentAttend ? (
+                            <DropdownMenuItem
+                              className="text-green-600 focus:text-green-600"
+                              onSelect={() =>
+                                handleAttending(booking.id, false)
+                              }
+                            >
+                              Mark Attend
+                            </DropdownMenuItem>
+                          ) : (
+                            <DropdownMenuItem
+                              className="text-orange-600 focus:text-orange-600"
+                              onSelect={() => handleLeaveClick(booking)}
+                            >
+                              Leave & Review
+                            </DropdownMenuItem>
+                          )}
+                        </>
+                      )}
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>
@@ -207,6 +238,12 @@ export default function BookingTable({ bookings }: { bookings: Booking[] }) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <ReviewDialog
+        isOpen={isReviewOpen}
+        onClose={() => setIsReviewOpen(false)}
+        onSubmit={onReviewSubmit}
+      />
     </div>
   );
 }
