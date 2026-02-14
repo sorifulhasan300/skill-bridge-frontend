@@ -5,6 +5,7 @@ export interface Booking {
   amount: number;
   status: "CONFIRMED" | "CANCELLED" | "COMPLETED";
   startTime: string;
+  studentAttend: boolean;
   endTime: string;
   createdAt: string;
   updatedAt: string;
@@ -17,8 +18,8 @@ export interface Booking {
 export type BookingPayload = {
   tutorId: string;
   studentId: string;
-  day: string; 
+  day: string;
   slotId: string;
-  startTime: string; 
-  endTime: string; 
+  startTime: string;
+  endTime: string;
 };

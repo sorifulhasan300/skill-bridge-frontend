@@ -8,7 +8,7 @@ export const bookingService = {
       const cookieStore = await cookies();
       const allCookies = cookieStore.toString();
 
-      const res = await fetch(`${env.DATABASE_URL}/api/bookings`, {
+      const res = await fetch(`${env.DATABASE_URL}/api/bookings/student`, {
         headers: {
           Cookie: allCookies,
         },
@@ -119,8 +119,7 @@ export const bookingService = {
   },
 
   CreateBooking: async (payload: BookingPayload) => {
-    const cookieStore = await cookies();
-    const Cookies = cookieStore.toString();
+    const Cookies = (await cookies()).toString();
     try {
       const response = await fetch(`${env.DATABASE_URL}/api/bookings`, {
         method: "POST",
@@ -146,6 +145,38 @@ export const bookingService = {
         message: "Booking confirmed!",
         error: null,
       };
+    } catch (error) {
+      return {
+        success: false,
+        message: null,
+        error: "Network connection failed",
+      };
+    }
+  },
+  handleAttendance: async (bookingId: string, currentStatus: boolean) => {
+    console.log("student attending data", bookingId, currentStatus);
+
+    try {
+      const Cookies = (await cookies()).toString();
+
+      const response = await fetch(
+        `${env.DATABASE_URL}/api/bookings/${bookingId}/attend/`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json", Cookie: Cookies },
+          body: JSON.stringify({ isAttending: currentStatus }),
+        },
+      );
+      const data = await response.json();
+
+      if (!response.ok) {
+        return {
+          success: false,
+          message: null,
+          error: data.message || "Attend Failed!",
+        };
+      }
+      return { success: true, message: "Student attended", error: null };
     } catch (error) {
       return {
         success: false,

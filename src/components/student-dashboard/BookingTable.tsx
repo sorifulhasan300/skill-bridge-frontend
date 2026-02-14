@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { updateStudentBookingStatus } from "@/action/action";
+import { handleAttendance, updateStudentBookingStatus } from "@/action/action";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -41,30 +41,62 @@ export default function BookingTable({ bookings }: { bookings: Booking[] }) {
   const [isPending, setIsPending] = useState(false);
 
   const handleCancelBooking = async (id: string, status: string) => {
-    try {
-      setIsPending(true);
+    setIsPending(true);
 
+    const toastId = toast.loading("booking updating...");
+
+    try {
       const { data, error, success } = await updateStudentBookingStatus(
         id,
         status,
       );
-      console.log("handle booking response", error);
 
       if (success) {
         router.refresh();
         setIsAlertOpen(false);
-        toast.success("Successfully Update");
+        toast.success("Successfully Update", { id: toastId });
       } else {
         toast.error(error);
       }
     } catch (error) {
-      toast.error("Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.", { id: toastId });
     } finally {
-      setIsPending(false);
       setSelectedBookingId(null);
+      setIsPending(false);
     }
   };
 
+  const handleAttending = async (
+    bookingId: string,
+    currentAttendStatus: boolean,
+  ) => {
+    console.log(bookingId, currentAttendStatus);
+    const toastId = toast.loading("attend updating...");
+
+    try {
+      const nextStatus = !currentAttendStatus;
+
+      const result = await handleAttendance(bookingId, nextStatus);
+
+      if (result?.success) {
+        toast.success(
+          nextStatus ? "Marked as Attended!" : "Marked as Absent/Left",
+          { id: toastId },
+        );
+        window.location.reload();
+      } else {
+        throw new Error("Failed to update status");
+      }
+    } catch (error: unknown) {
+      let errorMessage = "Something went wrong!";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      toast.error(errorMessage, {
+        id: toastId,
+      });
+    }
+  };
   return (
     <div className="border rounded-md m-4">
       <Table>
@@ -95,12 +127,8 @@ export default function BookingTable({ bookings }: { bookings: Booking[] }) {
                     {booking.status}
                   </span>
                 </TableCell>
-                <TableCell>
-                  {new Date(booking.startTime).toLocaleDateString()}
-                </TableCell>
-                <TableCell>
-                  {new Date(booking.endTime).toLocaleDateString()}
-                </TableCell>
+                <TableCell>{booking.startTime} PM</TableCell>
+                <TableCell>{booking.endTime} PM</TableCell>
 
                 <TableCell className="text-right">
                   <DropdownMenu>
@@ -119,6 +147,18 @@ export default function BookingTable({ bookings }: { bookings: Booking[] }) {
                         }}
                       >
                         Cancel Booking
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        className="text-green-500"
+                        onSelect={() => {
+                          handleAttending(booking.id, booking.studentAttend);
+                          setSelectedBookingId(booking.id);
+                        }}
+                      >
+                        Attend
+                      </DropdownMenuItem>
+                      <DropdownMenuItem className="text-green-500">
+                        Leave
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -151,7 +191,7 @@ export default function BookingTable({ bookings }: { bookings: Booking[] }) {
               onClick={(e) => {
                 e.preventDefault();
                 if (selectedBookingId)
-                  handleCancelBooking(selectedBookingId, "CANCELED");
+                  handleCancelBooking(selectedBookingId, "CANCELLED");
               }}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >

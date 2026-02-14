@@ -72,3 +72,14 @@ export const createBooking = async (BookingPayload: BookingPayload) => {
   const result = await bookingService.CreateBooking(BookingPayload);
   return result;
 };
+
+export const handleAttendance = async (
+  bookingId: string,
+  currentStatus: boolean,
+) => {
+  const result = await bookingService.handleAttendance(
+    bookingId,
+    currentStatus,
+  );
+  return result;
+};
