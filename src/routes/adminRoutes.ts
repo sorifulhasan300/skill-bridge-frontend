@@ -1,9 +1,20 @@
 import { Route } from "@/types/route.types";
-import { Map } from "lucide-react";
+import { Users, CalendarCheck, LayoutGrid } from "lucide-react";
+
 export const adminRoutes: Route[] = [
   {
     title: "Manage Users",
-    logo: Map,
-    url: "/admin-dashboard/manage-users",
+    logo: Users,
+    url: "/admin-dashboard/users",
+  },
+  {
+    title: "All Bookings",
+    logo: CalendarCheck,
+    url: "/admin-dashboard/bookings",
+  },
+  {
+    title: "Manage Categories",
+    logo: LayoutGrid,
+    url: "/admin-dashboard/categories",
   },
 ];

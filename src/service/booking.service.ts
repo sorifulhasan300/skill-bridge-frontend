@@ -53,6 +53,32 @@ export const bookingService = {
     }
   },
 
+  getAdminBookings: async () => {
+    try {
+      const cookieStore = await cookies();
+      const allCookies = cookieStore.toString();
+
+      const res = await fetch(`${env.DATABASE_URL}/api/bookings/admin`, {
+        headers: {
+          Cookie: allCookies,
+        },
+        cache: "no-store",
+      });
+
+      if (!res.ok) {
+        return { data: null, error: "failed to fetch booking" };
+      }
+
+      const data = await res.json();
+      return { data: data, error: null };
+    } catch (error) {
+      return {
+        data: null,
+        error: "Server connection failed. Please try again.",
+      };
+    }
+  },
+
   updateBooking: async (bookingId: string, status: string) => {
     const cookieStore = await cookies();
     const Cookies = cookieStore.toString();

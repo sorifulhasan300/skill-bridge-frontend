@@ -31,7 +31,6 @@ import { Booking } from "@/types/booking.typs";
 import { MoreHorizontalIcon, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { stat } from "fs";
 
 export default function BookingTable({ bookings }: { bookings: Booking[] }) {
   const router = useRouter();
