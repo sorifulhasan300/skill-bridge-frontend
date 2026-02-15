@@ -23,7 +23,6 @@ export default async function TutorPage({
         .join("&")
     : "";
 
-  // ক্যাটাগরি সবসময় আগে লোড হয়ে থাকবে (Static or pre-fetched)
   const { data: categoriesResponse } = await categoryService.getCategories();
   const categories = categoriesResponse?.data || [];
 
@@ -38,7 +37,6 @@ export default async function TutorPage({
       <Suspense key={queryString} fallback={<TutorGridSkeleton />}>
         <TutorList queryString={queryString} />
       </Suspense>
-
     </div>
   );
 }

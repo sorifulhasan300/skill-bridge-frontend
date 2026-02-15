@@ -1,6 +1,6 @@
 "use client";
 
-import { Book, Menu, Sunset, Trees, Zap } from "lucide-react";
+import { Book, GraduationCap, Menu, Sunset, Trees, Zap } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -106,21 +106,17 @@ const Navbar = ({
       <div className="container w-full mx-auto">
         {/* Desktop Menu */}
         <nav className="hidden items-center justify-between lg:flex">
-          <div className="flex items-center gap-6">
-            {/* Logo */}
-            <a href={logo.url} className="flex items-center gap-2">
-              <Image
-                width={50}
-                height={50}
-                src={logo.src}
-                className="max-h-8 dark:invert"
-                alt={logo.alt}
-              />
-              <span className="text-lg font-semibold tracking-tighter">
-                {logo.title}
+          <div className="flex items-center gap-2 px-2">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
+              <GraduationCap className="h-6 w-6 text-primary-foreground" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-lg font-semibold leading-tight">
+                TutorHub
               </span>
-            </a>
+            </div>
           </div>
+
           <div className="flex items-center">
             <NavigationMenu>
               <NavigationMenuList>
@@ -161,15 +157,12 @@ const Navbar = ({
         <div className="block lg:hidden">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <a href={logo.url} className="flex items-center gap-2">
-              <Image
-                width={50}
-                height={50}
-                src={logo.src}
-                className="max-h-8 dark:invert"
-                alt={logo.alt}
-              />
-            </a>
+            <Link className="" href={"/"}>
+              <div className="flex  h-10 w-10 items-center justify-center rounded-lg bg-primary">
+                <GraduationCap className="h-6 w-6 text-primary-foreground" />
+              </div>
+            </Link>
+
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="outline" size="icon">

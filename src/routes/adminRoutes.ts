@@ -1,10 +1,15 @@
 import { Route } from "@/types/route.types";
-import { Users, CalendarCheck, LayoutGrid } from "lucide-react";
+import {
+  Users,
+  CalendarCheck,
+  LayoutGrid,
+  LayoutDashboard,
+} from "lucide-react";
 
 export const adminRoutes: Route[] = [
   {
     title: "Dashboard",
-    logo: Users,
+    logo: LayoutDashboard,
     url: "/admin-dashboard",
   },
   {
