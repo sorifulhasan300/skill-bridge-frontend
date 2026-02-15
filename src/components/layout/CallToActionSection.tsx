@@ -48,7 +48,7 @@ export function CallToActionSection() {
                 knowledge, set your own schedule, and earn while you teach.
               </p>
               <Button asChild size="lg" className="group/btn">
-                <Link href="/become-tutor">
+                <Link href="/tutor-dashboard/create-profile">
                   Apply Now
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
                 </Link>

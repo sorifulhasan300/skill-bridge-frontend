@@ -5,7 +5,7 @@ interface PageProps {
 export default async function page({ params }: PageProps) {
   const { id } = await params;
   return (
-    <div className="bg-gray-50 lg:min-h-screen">
+    <div className="mt-10 lg:min-h-screen">
       <TutorDetails tutorId={id}></TutorDetails>
     </div>
   );

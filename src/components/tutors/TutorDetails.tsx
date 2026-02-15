@@ -83,47 +83,49 @@ export default function TutorDetails({ tutorId }: { tutorId: string }) {
     );
 
   return (
-    <div className="max-w-5xl mx-auto p-6 space-y-10">
+    <div className="max-w-7xl mx-auto p-4 md:p-6 space-y-10 bg-background text-foreground transition-colors">
       {/* Profile Header */}
-      <div className="flex flex-col md:flex-row gap-6 items-start border-b pb-8">
-        <Avatar className="h-24 w-24 rounded-lg border shadow-sm">
+      <div className="flex flex-col md:flex-row gap-6 items-start border-b border-border pb-8">
+        <Avatar className="h-24 w-24 rounded-lg border border-border shadow-sm">
           <AvatarImage src={tutorDetails.user.image} />
-          <AvatarFallback className="rounded-lg bg-slate-100">
+          <AvatarFallback className="rounded-lg bg-muted text-muted-foreground">
             {tutorDetails.user.name.charAt(0)}
           </AvatarFallback>
         </Avatar>
 
         <div className="flex-1 space-y-1">
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
+            <h1 className="text-2xl font-semibold tracking-tight text-foreground">
               {tutorDetails.user.name}
             </h1>
             {tutorDetails.isFeatured && (
-              <BadgeCheck className="text-blue-500 w-5 h-5" />
+              <BadgeCheck className="text-blue-500 dark:text-blue-400 w-5 h-5" />
             )}
           </div>
-          <p className="text-slate-500 font-medium">{tutorDetails.title}</p>
+          <p className="text-muted-foreground font-medium">
+            {tutorDetails.title}
+          </p>
 
           <div className="flex flex-wrap gap-4 pt-2">
-            <div className="flex items-center gap-1 text-sm font-semibold text-slate-700">
+            <div className="flex items-center gap-1 text-sm font-semibold text-foreground/80">
               <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
               {tutorDetails.averageRating}{" "}
-              <span className="text-slate-400 font-normal">
+              <span className="text-muted-foreground font-normal">
                 ({tutorDetails.totalReviews} reviews)
               </span>
             </div>
-            <div className="flex items-center gap-1 text-sm text-slate-500">
+            <div className="flex items-center gap-1 text-sm text-muted-foreground">
               <Mail className="w-4 h-4" />
               {tutorDetails.user.email}
             </div>
           </div>
         </div>
 
-        <div className="md:text-right bg-slate-50 p-4 rounded-lg border">
+        <div className="md:text-right bg-muted/50 p-4 rounded-lg border border-border">
           <p className="text-2xl font-bold text-primary">
             ৳{tutorDetails.hourlyRate}
           </p>
-          <p className="text-[10px] text-slate-500 uppercase font-bold tracking-widest">
+          <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">
             Rate per hour
           </p>
         </div>
@@ -134,22 +136,22 @@ export default function TutorDetails({ tutorId }: { tutorId: string }) {
         <div className="md:col-span-2 space-y-10">
           {/* About Section */}
           <section className="space-y-3">
-            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">
+            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
               About Me
             </h3>
-            <p className="text-slate-600 leading-relaxed text-[15px]">
+            <p className="text-muted-foreground leading-relaxed text-[15px]">
               {tutorDetails.bio}
             </p>
           </section>
 
           {/* Experience Grid */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 rounded-lg border bg-white shadow-sm flex items-center gap-3">
-              <div className="p-2 bg-slate-50 rounded-md">
-                <Briefcase className="w-4 h-4 text-slate-600" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="p-4 rounded-lg border border-border bg-card shadow-sm flex items-center gap-3">
+              <div className="p-2 bg-muted rounded-md">
+                <Briefcase className="w-4 h-4 text-muted-foreground" />
               </div>
               <div>
-                <p className="text-[10px] text-slate-400 uppercase font-bold">
+                <p className="text-[10px] text-muted-foreground uppercase font-bold">
                   Experience
                 </p>
                 <p className="text-sm font-semibold">
@@ -157,12 +159,12 @@ export default function TutorDetails({ tutorId }: { tutorId: string }) {
                 </p>
               </div>
             </div>
-            <div className="p-4 rounded-lg border bg-white shadow-sm flex items-center gap-3">
-              <div className="p-2 bg-slate-50 rounded-md">
-                <Clock className="w-4 h-4 text-slate-600" />
+            <div className="p-4 rounded-lg border border-border bg-card shadow-sm flex items-center gap-3">
+              <div className="p-2 bg-muted rounded-md">
+                <Clock className="w-4 h-4 text-muted-foreground" />
               </div>
               <div>
-                <p className="text-[10px] text-slate-400 uppercase font-bold">
+                <p className="text-[10px] text-muted-foreground uppercase font-bold">
                   Availability
                 </p>
                 <p className="text-sm font-semibold">
@@ -174,8 +176,8 @@ export default function TutorDetails({ tutorId }: { tutorId: string }) {
 
           {/* Reviews Section */}
           <section className="space-y-6 pt-4">
-            <div className="flex items-center justify-between border-b pb-3">
-              <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2">
+            <div className="flex items-center justify-between border-b border-border pb-3">
+              <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
                 <MessageSquare className="w-4 h-4" /> Student Reviews
               </h3>
             </div>
@@ -185,21 +187,21 @@ export default function TutorDetails({ tutorId }: { tutorId: string }) {
                 tutorDetails.reviews.slice(0, 4).map((review, index) => (
                   <div
                     key={index}
-                    className="p-5 rounded-xl border bg-white space-y-3"
+                    className="p-5 rounded-xl border border-border bg-card space-y-3"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <Avatar className="h-8 w-8 border">
+                        <Avatar className="h-8 w-8 border border-border">
                           <AvatarImage src={review.student.image} />
                           <AvatarFallback>
                             {review.student.name.charAt(0)}
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="text-sm font-semibold text-slate-800">
+                          <p className="text-sm font-semibold text-foreground">
                             {review.student.name}
                           </p>
-                          <p className="text-[10px] text-slate-400">
+                          <p className="text-[10px] text-muted-foreground">
                             {review.student.email}
                           </p>
                         </div>
@@ -208,19 +210,19 @@ export default function TutorDetails({ tutorId }: { tutorId: string }) {
                         {[...Array(5)].map((_, i) => (
                           <Star
                             key={i}
-                            className={`w-3 h-3 ${i < review.rating ? "fill-amber-400 text-amber-400" : "text-slate-200"}`}
+                            className={`w-3 h-3 ${i < review.rating ? "fill-amber-400 text-amber-400" : "text-muted/30"}`}
                           />
                         ))}
                       </div>
                     </div>
-                    <p className="text-sm text-slate-600 leading-normal italic">
-                      {review.comment}
+                    <p className="text-sm text-muted-foreground leading-normal italic">
+                      &quot;{review.comment}&quot;
                     </p>
                   </div>
                 ))
               ) : (
-                <div className="text-center py-6 border-2 border-dashed rounded-xl">
-                  <p className="text-sm text-slate-400">
+                <div className="text-center py-6 border-2 border-dashed border-border rounded-xl">
+                  <p className="text-sm text-muted-foreground">
                     No reviews yet for this tutor.
                   </p>
                 </div>
@@ -231,16 +233,15 @@ export default function TutorDetails({ tutorId }: { tutorId: string }) {
 
         {/* Right: Schedule Card */}
         <div className="space-y-4">
-          <Card className="shadow-sm border rounded-xl overflow-hidden">
-            <CardHeader className="py-4 border-b bg-slate-50/50">
-              <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-700">
+          <Card className="shadow-sm border border-border rounded-xl overflow-hidden bg-card">
+            <CardHeader className="py-4 border-b border-border bg-muted/30">
+              <CardTitle className="text-sm font-bold flex items-center gap-2 text-foreground/80">
                 <CalendarDays className="w-4 h-4 text-primary" /> Select
                 Schedule
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0 max-h-[450px] overflow-y-auto">
               {(() => {
-                // Age active days gulo ekta variable e niye ashi
                 const daysWithSlots = [
                   { label: "Saturday", key: "sat" },
                   { label: "Sunday", key: "sun" },
@@ -256,25 +257,23 @@ export default function TutorDetails({ tutorId }: { tutorId: string }) {
                     ]?.length > 0,
                 );
 
-                // Jodi kono slot na thake
                 if (daysWithSlots.length === 0) {
                   return (
                     <div className="p-10 text-center space-y-2">
-                      <AlertCircle className="w-8 h-8 text-slate-300 mx-auto" />
-                      <p className="text-sm text-slate-500 font-medium">
+                      <AlertCircle className="w-8 h-8 text-muted/50 mx-auto" />
+                      <p className="text-sm text-muted-foreground font-medium">
                         No time slots available.
                       </p>
                     </div>
                   );
                 }
 
-                // Jodi slot thake, tobe map korbe
                 return daysWithSlots.map((day) => (
                   <div
                     key={day.key}
-                    className="p-4 border-b last:border-0 bg-white"
+                    className="p-4 border-b border-border last:border-0 bg-card"
                   >
-                    <p className="text-[10px] font-black uppercase text-slate-400 mb-3 tracking-widest">
+                    <p className="text-[10px] font-black uppercase text-muted-foreground mb-3 tracking-widest">
                       {day.label}
                     </p>
                     <div className="space-y-2">
@@ -290,13 +289,13 @@ export default function TutorDetails({ tutorId }: { tutorId: string }) {
                               setSelectedSlot({ day: day?.label, slot })
                             }
                             className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm border transition-all
-                      ${
-                        slot.isBooked
-                          ? "bg-slate-50 text-slate-300 cursor-not-allowed border-slate-100"
-                          : isSelected
-                            ? "bg-slate-900 text-white border-slate-900 shadow-md"
-                            : "bg-white hover:bg-slate-50 border-slate-200 text-slate-600"
-                      }`}
+                        ${
+                          slot.isBooked
+                            ? "bg-muted text-muted-foreground/30 cursor-not-allowed border-transparent"
+                            : isSelected
+                              ? "bg-primary text-primary-foreground border-primary shadow-md"
+                              : "bg-card hover:bg-muted border-border text-foreground/80"
+                        }`}
                           >
                             <span className="font-medium">
                               {slot.start} - {slot.end}
@@ -304,7 +303,7 @@ export default function TutorDetails({ tutorId }: { tutorId: string }) {
                             {slot.isBooked && (
                               <Badge
                                 variant="outline"
-                                className="text-[9px] uppercase h-4 px-1 text-slate-300 border-slate-200"
+                                className="text-[9px] uppercase h-4 px-1 opacity-50"
                               >
                                 Booked
                               </Badge>
@@ -328,13 +327,13 @@ export default function TutorDetails({ tutorId }: { tutorId: string }) {
           </Button>
 
           {selectedSlot && (
-            <div className="p-3 rounded-lg bg-primary/5 border border-primary/10 text-center animate-in fade-in slide-in-from-top-1">
-              <p className="text-[11px] text-slate-600">
-                You selected
+            <div className="p-3 rounded-lg bg-primary/10 border border-primary/20 text-center animate-in fade-in slide-in-from-top-1">
+              <p className="text-[11px] text-foreground/80">
+                You selected{" "}
                 <span className="font-bold text-primary">
                   {selectedSlot.day}
-                </span>
-                at
+                </span>{" "}
+                at{" "}
                 <span className="font-bold text-primary">
                   {selectedSlot.slot.start}
                 </span>

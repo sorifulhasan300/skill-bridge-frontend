@@ -13,13 +13,13 @@ import {
 import { Roles } from "@/constants/constants";
 import { useAuth } from "@/context/auth-context";
 import { authClient } from "@/lib/auth-client";
-import { logout } from "@/service/logout.service";
 import { BadgeCheckIcon, LogOutIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 import { toast } from "sonner";
 export function DropdownMenuAvatar() {
-  const { session, refreshAuth } = useAuth();
+  const auth = useAuth();
+  const session = auth?.session;
+  const refreshAuth = auth?.refreshAuth;
   const router = useRouter();
   const role = session?.user?.role;
   const handleSignOut = async () => {
@@ -28,7 +28,7 @@ export function DropdownMenuAvatar() {
         onSuccess: async () => {
           toast.success("Signed out successfully");
           router.push("/login");
-          await refreshAuth();
+          if (refreshAuth) await refreshAuth();
         },
         onError: (ctx) => {
           toast.error(ctx.error.message || "Something went wrong");

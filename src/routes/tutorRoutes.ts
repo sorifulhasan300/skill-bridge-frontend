@@ -10,9 +10,9 @@ import {
 
 export const tutorRoutes: Route[] = [
   {
-    title: "Dashboard", // Main Home page
+    title: "Dashboard", 
     logo: LayoutDashboard,
-    url: "/tutor-dashboard", // Root of your dashboard
+    url: "/tutor-dashboard", 
   },
   {
     title: "Bookings",

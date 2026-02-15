@@ -6,7 +6,7 @@ export const userService = {
     try {
       const cookiesStore = await cookies();
       const res = await fetch(
-        "http://localhost:5000/api/auth/get-session" as string,
+        `${env.DATABASE_URL}/api/auth/get-session` as string,
         {
           headers: {
             Cookie: cookiesStore.toString(),
