@@ -5,9 +5,8 @@ import { Users, BookOpen, DollarSign, Activity } from "lucide-react";
 interface StatsCardsProps {
   stats: StatsOverview;
 }
-
+export const dynamic = "force-dynamic";
 export function StatsCards({ stats }: StatsCardsProps) {
-  stats;
   const cards = [
     {
       title: "Total Revenue",

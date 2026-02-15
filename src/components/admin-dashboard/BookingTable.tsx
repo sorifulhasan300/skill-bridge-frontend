@@ -48,12 +48,8 @@ export default function BookingTable({ bookings }: { bookings: Booking[] }) {
                 <TableCell className="font-medium">
                   {booking.student?.email || "N/A"}
                 </TableCell>
-                <TableCell>
-                  {new Date(booking.startTime).toLocaleDateString()}
-                </TableCell>
-                <TableCell>
-                  {new Date(booking.endTime).toLocaleDateString()}
-                </TableCell>
+                <TableCell>{booking.startTime} AM</TableCell>
+                <TableCell>{booking.endTime} PM</TableCell>
               </TableRow>
             ))
           ) : (

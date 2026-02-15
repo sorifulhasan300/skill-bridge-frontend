@@ -86,7 +86,6 @@ export default function AvailabilityCard({
       }
 
       toast.success("Availability updated successfully!", { id: toastId });
-      ("Updated Data:", data);
     } catch (err) {
       toast.error("An unexpected error occurred.");
       console.error(err);

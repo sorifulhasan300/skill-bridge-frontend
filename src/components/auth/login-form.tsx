@@ -33,7 +33,8 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const { refreshAuth } = useAuth();
+  const auth = useAuth();
+  const refreshAuth = auth?.refreshAuth;
 
   const router = useRouter();
   const form = useForm({
@@ -53,7 +54,9 @@ export function LoginForm({
           return;
         }
         toast.success("Login Successfully", { id: toastId });
-        await refreshAuth();
+        if (refreshAuth) {
+          await refreshAuth();
+        }
         router.push("/");
       } catch (error) {
         toast.error("Something was wrong", { id: toastId });

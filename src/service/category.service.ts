@@ -41,7 +41,7 @@ export const categoryService = {
       if (categories === null) {
         return { data: null, error: "cookies not found" };
       }
-      return { data: categories, error: null };
+      return { data: categories || [], error: null };
     } catch (error) {
       return {
         data: null,

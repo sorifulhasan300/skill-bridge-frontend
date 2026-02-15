@@ -1,6 +1,7 @@
 import UpdateTutorProfile from "@/components/tutor-dashboard/UpdateTutorProfile";
 import { tutorService } from "@/service/tutors.service";
 import React from "react";
+export const dynamic = "force-dynamic";
 
 export default async function page() {
   const { data } = await tutorService.getTutorProfile();

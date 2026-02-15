@@ -17,13 +17,23 @@ import { User, Mail, Briefcase, Camera, ImageIcon } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
+import { SessionUser } from "@/types/user.types";
 
 export default function ProfileCard() {
-  const { session, refreshAuth } = useAuth();
+  const { session } = useAuth() || {};
   const [isEditing, setIsEditing] = useState(false);
-  const [user, setUser] = useState(session?.user || {});
+  const [user, setUser] = useState<SessionUser>(
+    session?.user && "name" in session.user && "image" in session.user
+      ? (session.user as SessionUser)
+      : { name: "", image: "" },
+  );
+
   if (session?.user && Object.keys(user).length === 0 && !isEditing) {
-    setUser(session.user);
+    setUser(
+      session?.user && "name" in session.user && "image" in session.user
+        ? (session.user as SessionUser)
+        : { name: "", image: "" },
+    );
   }
 
   const handleSave = async () => {
@@ -49,7 +59,11 @@ export default function ProfileCard() {
   };
 
   const handleCancel = () => {
-    setUser(session?.user || {});
+    setUser(
+      session?.user && "name" in session.user && "image" in session.user
+        ? (session.user as SessionUser)
+        : ({ name: "", image: "" } as SessionUser),
+    );
     setIsEditing(false);
   };
 

@@ -65,7 +65,7 @@ export const updateCategory = async (
     icon: string;
   },
 ) => {
-  (updatedPayload, id);
+  // removed unused expression
   const result = await categoryService.updateCategoryData(id, updatedPayload);
   return result;
 };

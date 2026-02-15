@@ -57,7 +57,7 @@ export const adminService = {
         };
       }
 
-      return { data: result.data, error: null };
+      return { data: result.data || [], error: null };
     } catch (error) {
       console.error("Fetch Statistics Error:", error);
       return {

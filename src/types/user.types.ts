@@ -13,3 +13,10 @@ export type User = {
   createdAt: string;
   status: UserStatus;
 };
+
+export interface SessionUser {
+  name: string;
+  image: string;
+  email?: string;
+  role?: string;
+}
