@@ -14,8 +14,6 @@ import { Tutor } from "@/types/tutor.types";
 export function TutorCard({ tutor }: { tutor: Tutor }) {
   return (
     <Card className="group overflow-hidden border-border bg-card  dark:hover:border-primary/50">
-      {/* Header with Background Gradient Effect */}
-
       <CardHeader className="flex flex-row gap-4 items-start pt-6">
         <div className="relative">
           <Image

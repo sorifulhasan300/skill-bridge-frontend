@@ -24,8 +24,8 @@ export function Footer() {
               <span className="text-xl font-bold tracking-tight">TutorHub</span>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              আপনার শিক্ষার যাত্রাকে সহজ করতে আমরা নিয়ে এসেছি সেরা টিউটরদের এক
-              বিশাল প্ল্যাটফর্ম। শিখুন আপনার নিজের সুবিধামতো।
+              Empowering your learning journey with a vast network of expert
+              tutors. Learn at your own pace, on your own terms.
             </p>
             <div className="flex gap-4">
               <Link

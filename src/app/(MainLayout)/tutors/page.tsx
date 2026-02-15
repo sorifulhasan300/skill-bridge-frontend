@@ -13,7 +13,6 @@ export default async function TutorPage({
 }) {
   const params = await searchParams;
 
-  // URL Query String তৈরি
   const queryString = params
     ? Object.entries(params)
         .filter(([_, v]) => v !== undefined)
