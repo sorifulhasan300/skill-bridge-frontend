@@ -1,18 +1,44 @@
-import { TutorCard } from "@/components/tutors/TutorsCard";
-import { tutorService } from "@/service/tutors.service";
-import { Tutor } from "@/types/tutor.types";
-import React from "react";
+// app/tutors/page.tsx
+import { Suspense } from "react";
+import { SearchTutor } from "@/components/tutors/SearchTutor";
+import { CategoryFilter } from "@/components/tutors/CategoryFilter";
+import { categoryService } from "@/service/category.service";
+import TutorGridSkeleton from "@/components/tutors/TutorGridSkeleton";
+import TutorList from "@/components/tutors/TutorList";
 
-export default async function TutorPage() {
-  const { data: tutors, error } = await tutorService.getAllTutors();
+export default async function TutorPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | undefined }>;
+}) {
+  const params = await searchParams;
+
+  // URL Query String তৈরি
+  const queryString = params
+    ? Object.entries(params)
+        .filter(([_, v]) => v !== undefined)
+        .map(
+          ([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v ?? "")}`,
+        )
+        .join("&")
+    : "";
+
+  // ক্যাটাগরি সবসময় আগে লোড হয়ে থাকবে (Static or pre-fetched)
+  const { data: categoriesResponse } = await categoryService.getCategories();
+  const categories = categoriesResponse?.data || [];
 
   return (
-    <div className="max-w-10/12 mx-auto  ">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-10 ">
-        {tutors.data.map((tutors: Tutor) => (
-          <TutorCard key={tutors.id} tutor={tutors}></TutorCard>
-        ))}
+    <div className="max-w-7xl mx-auto px-4 py-10">
+      <div className="flex flex-col space-y-6">
+        <h1 className="text-3xl font-bold">Find Your Best Tutor</h1>
+        <SearchTutor />
+        <CategoryFilter categories={categories} />
       </div>
+
+      <Suspense key={queryString} fallback={<TutorGridSkeleton />}>
+        <TutorList queryString={queryString} />
+      </Suspense>
+
     </div>
   );
 }

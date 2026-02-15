@@ -190,7 +190,7 @@ export default function UpdateTutorProfile({
                   <Field className="md:col-span-2">
                     <FieldLabel>Teaching Categories</FieldLabel>
                     <div className="flex flex-wrap gap-2 mb-3">
-                      {field.state.value.map((catId: string) => {
+                      {field.state.value?.map((catId: string) => {
                         // Finding name from newly fetched list or initial data
                         const foundInList = categories.find(
                           (c) => c.id === catId,
@@ -246,7 +246,7 @@ export default function UpdateTutorProfile({
                           <CommandList>
                             <CommandEmpty>No results found.</CommandEmpty>
                             <CommandGroup>
-                              {categories.map((cat) => {
+                              {categories?.map((cat) => {
                                 const isSelected = field.state.value.includes(
                                   cat.id,
                                 );

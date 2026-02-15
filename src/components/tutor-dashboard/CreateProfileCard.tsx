@@ -158,7 +158,7 @@ export default function CreateProfile() {
               <form.Field name="experience">
                 {(field) => (
                   <Field>
-                    <FieldLabel>Hourly Rate (BDT)</FieldLabel>
+                    <FieldLabel>Experience (YEAR)</FieldLabel>
                     <Input
                       type="number"
                       value={field.state.value}
@@ -180,7 +180,7 @@ export default function CreateProfile() {
 
                   {/* Selected Badges */}
                   <div className="flex flex-wrap gap-2 mb-3">
-                    {field.state.value.map((catId) => {
+                    {field.state.value?.map((catId) => {
                       const catName =
                         availableCategories.find((c) => c.id === catId)?.name ||
                         "Selected";
@@ -230,7 +230,7 @@ export default function CreateProfile() {
                             {loading ? "Searching..." : "No subjects found."}
                           </CommandEmpty>
                           <CommandGroup>
-                            {availableCategories.map((cat) => {
+                            {availableCategories?.map((cat) => {
                               const isSelected = field.state.value.includes(
                                 cat.id,
                               );

@@ -30,14 +30,11 @@ import Image from "next/image";
 import { ModeToggle } from "./ModeToggler";
 import { DropdownMenuAvatar } from "./Avatar";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { logout } from "@/service/logout.service";
 import { useRouter } from "next/navigation";
 import { Roles } from "@/constants/constants";
 import { Spinner } from "../ui/spinner";
-import { getSession } from "@/action/action";
-import { Session } from "@/types/session.type";
 import { useAuth } from "@/context/auth-context";
+import { logout } from "@/service/logout.service";
 
 interface MenuItem {
   title: string;
@@ -98,7 +95,9 @@ const Navbar = ({
   className,
 }: Navbar1Props) => {
   const router = useRouter();
-  const { session, isLoading } = useAuth();
+  const authContext = useAuth();
+  const session = authContext?.session;
+  const isLoading = authContext?.isLoading || false;
   const role = session?.user?.role;
 
   console.log(role);
@@ -125,7 +124,7 @@ const Navbar = ({
           <div className="flex items-center">
             <NavigationMenu>
               <NavigationMenuList>
-                {menu.map((item) => renderMenuItem(item))}
+                {menu?.map((item) => renderMenuItem(item))}
               </NavigationMenuList>
             </NavigationMenu>
           </div>
@@ -197,7 +196,7 @@ const Navbar = ({
                     collapsible
                     className="flex w-full flex-col gap-4"
                   >
-                    {menu.map((item) => renderMobileMenuItem(item))}
+                    {menu?.map((item) => renderMobileMenuItem(item))}
                   </Accordion>
                   {session ? (
                     <>
@@ -244,7 +243,7 @@ const renderMenuItem = (item: MenuItem) => {
       <NavigationMenuItem key={item.title}>
         <NavigationMenuTrigger>{item.title}</NavigationMenuTrigger>
         <NavigationMenuContent className="bg-popover text-popover-foreground">
-          {item.items.map((subItem) => (
+          {item?.items?.map((subItem) => (
             <NavigationMenuLink asChild key={subItem.title} className="w-80">
               <SubMenuLink item={subItem} />
             </NavigationMenuLink>

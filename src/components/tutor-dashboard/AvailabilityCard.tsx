@@ -100,7 +100,7 @@ export default function AvailabilityCard({
       </CardHeader>
 
       <CardContent className="space-y-4">
-        {days.map((day) => (
+        {days?.map((day) => (
           <div key={day.value} className="border rounded-lg p-3">
             <div className="flex justify-between items-center mb-2">
               <span className="text-sm font-bold uppercase text-muted-foreground">

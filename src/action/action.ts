@@ -3,9 +3,11 @@
 import { adminService } from "@/service/admin.service";
 import { bookingService } from "@/service/booking.service";
 import { categoryService } from "@/service/category.service";
+import { reviewService } from "@/service/review.service";
 import { userService } from "@/service/session.service";
 import { tutorService } from "@/service/tutors.service";
 import { BookingPayload } from "@/types/booking.typs";
+import { ReviewPayload } from "@/types/review.types";
 import { UserStatus } from "@/types/user.types";
 
 export const getSession = async () => {
@@ -81,5 +83,10 @@ export const handleAttendance = async (
     bookingId,
     currentStatus,
   );
+  return result;
+};
+export const postReviewAndCloseBooking = async (payload: ReviewPayload) => {
+  
+  const result = await reviewService.postReviewAndCloseBooking(payload);
   return result;
 };

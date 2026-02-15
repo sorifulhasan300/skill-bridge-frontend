@@ -6,9 +6,7 @@ export default async function page() {
   const { data } = await tutorService.getTutorProfile();
   return (
     <div>
-      <UpdateTutorProfile
-        initialData={data.data.timeSlots}
-      ></UpdateTutorProfile>
+      <UpdateTutorProfile initialData={data.data}></UpdateTutorProfile>
     </div>
   );
 }

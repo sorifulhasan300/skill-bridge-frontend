@@ -21,7 +21,8 @@ import { useAuth } from "@/context/auth-context";
 import { BookingPayload } from "@/types/booking.typs";
 
 export default function TutorDetails({ tutorId }: { tutorId: string }) {
-  const { session } = useAuth();
+  const auth = useAuth();
+  const session = auth?.session;
 
   const [tutorDetails, setTutorDetails] = useState<Tutor | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -50,7 +51,7 @@ export default function TutorDetails({ tutorId }: { tutorId: string }) {
     if (!selectedSlot || !tutorDetails) return;
 
     const payload = {
-      studentId: session.user?.id,
+      studentId: session?.user?.id,
       tutorId: tutorDetails.id,
       day: selectedSlot.day,
       slotId: selectedSlot.slot.id,
@@ -67,7 +68,7 @@ export default function TutorDetails({ tutorId }: { tutorId: string }) {
       toast.success(error || "Something was wrong!", { id: toastId });
     }
   };
-
+  const timeSlots = tutorDetails?.timeSlots || {};
   if (isLoading)
     return (
       <div className="p-10 text-center text-sm text-muted-foreground">
@@ -238,22 +239,37 @@ export default function TutorDetails({ tutorId }: { tutorId: string }) {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0 max-h-[450px] overflow-y-auto">
-              {[
-                { label: "Saturday", key: "sat" },
-                { label: "Sunday", key: "sun" },
-                { label: "Monday", key: "mon" },
-                { label: "Tuesday", key: "tue" },
-                { label: "Wednesday", key: "wed" },
-                { label: "Thursday", key: "thu" },
-                { label: "Friday", key: "fri" },
-              ]
-                .filter(
+              {(() => {
+                // Age active days gulo ekta variable e niye ashi
+                const daysWithSlots = [
+                  { label: "Saturday", key: "sat" },
+                  { label: "Sunday", key: "sun" },
+                  { label: "Monday", key: "mon" },
+                  { label: "Tuesday", key: "tue" },
+                  { label: "Wednesday", key: "wed" },
+                  { label: "Thursday", key: "thu" },
+                  { label: "Friday", key: "fri" },
+                ].filter(
                   (day) =>
-                    tutorDetails.timeSlots[
+                    tutorDetails?.timeSlots?.[
                       day.key as keyof typeof tutorDetails.timeSlots
                     ]?.length > 0,
-                )
-                .map((day) => (
+                );
+
+                // Jodi kono slot na thake
+                if (daysWithSlots.length === 0) {
+                  return (
+                    <div className="p-10 text-center space-y-2">
+                      <AlertCircle className="w-8 h-8 text-slate-300 mx-auto" />
+                      <p className="text-sm text-slate-500 font-medium">
+                        No time slots available.
+                      </p>
+                    </div>
+                  );
+                }
+
+                // Jodi slot thake, tobe map korbe
+                return daysWithSlots.map((day) => (
                   <div
                     key={day.key}
                     className="p-4 border-b last:border-0 bg-white"
@@ -262,25 +278,25 @@ export default function TutorDetails({ tutorId }: { tutorId: string }) {
                       {day.label}
                     </p>
                     <div className="space-y-2">
-                      {tutorDetails.timeSlots[
+                      {tutorDetails?.timeSlots?.[
                         day.key as keyof typeof tutorDetails.timeSlots
-                      ].map((slot) => {
+                      ]?.map((slot) => {
                         const isSelected = selectedSlot?.slot.id === slot.id;
                         return (
                           <button
                             key={slot.id}
                             disabled={slot.isBooked}
                             onClick={() =>
-                              setSelectedSlot({ day: day.label, slot })
+                              setSelectedSlot({ day: day?.label, slot })
                             }
                             className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm border transition-all
-                              ${
-                                slot.isBooked
-                                  ? "bg-slate-50 text-slate-300 cursor-not-allowed border-slate-100"
-                                  : isSelected
-                                    ? "bg-slate-900 text-white border-slate-900 shadow-md"
-                                    : "bg-white hover:bg-slate-50 border-slate-200 text-slate-600"
-                              }`}
+                      ${
+                        slot.isBooked
+                          ? "bg-slate-50 text-slate-300 cursor-not-allowed border-slate-100"
+                          : isSelected
+                            ? "bg-slate-900 text-white border-slate-900 shadow-md"
+                            : "bg-white hover:bg-slate-50 border-slate-200 text-slate-600"
+                      }`}
                           >
                             <span className="font-medium">
                               {slot.start} - {slot.end}
@@ -298,7 +314,8 @@ export default function TutorDetails({ tutorId }: { tutorId: string }) {
                       })}
                     </div>
                   </div>
-                ))}
+                ));
+              })()}
             </CardContent>
           </Card>
 

@@ -1,5 +1,5 @@
 import React from "react";
 
-export default function StudentDashboard() {
-  return <div>StudentDashboard</div>;
+export default function page() {
+  return <div>student dashboard</div>;
 }

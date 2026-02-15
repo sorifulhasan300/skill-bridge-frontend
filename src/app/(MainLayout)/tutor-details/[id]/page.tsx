@@ -1,6 +1,4 @@
 import TutorDetails from "@/components/tutors/TutorDetails";
-import { tutorService } from "@/service/tutors.service";
-import React from "react";
 interface PageProps {
   params: Promise<{ id: string }>; // Next.js 15 update: params ekhon promise
 }

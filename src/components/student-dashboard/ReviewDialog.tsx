@@ -33,7 +33,7 @@ export function ReviewDialog({ isOpen, onClose, onSubmit }: ReviewDialogProps) {
     }
 
     setIsSubmitting(true);
-    await onSubmit({ rating, comment });
+    onSubmit({ rating, comment });
     setIsSubmitting(false);
     onClose();
   };

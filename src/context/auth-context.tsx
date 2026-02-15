@@ -3,7 +3,15 @@
 import { getSession } from "@/action/action";
 import { Session } from "@/types/session.type";
 import React, { createContext, useContext, useState, useEffect } from "react";
-const AuthContext = createContext<any>(null);
+
+interface AuthContextType {
+  session: Session | null;
+  setSession: (session: Session | null) => void;
+  refreshAuth: () => Promise<void>;
+  isLoading: boolean;
+}
+
+const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider = ({
   children,
   initialSession,

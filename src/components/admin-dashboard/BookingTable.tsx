@@ -26,7 +26,7 @@ export default function BookingTable({ bookings }: { bookings: Booking[] }) {
         </TableHeader>
         <TableBody>
           {bookings?.length > 0 ? (
-            bookings.map((booking) => (
+            bookings?.map((booking) => (
               <TableRow key={booking.id}>
                 <TableCell className="font-medium">
                   {booking.amount} Taka

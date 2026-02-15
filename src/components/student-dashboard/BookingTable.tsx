@@ -1,7 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { handleAttendance, updateStudentBookingStatus } from "@/action/action";
+import {
+  handleAttendance,
+  postReviewAndCloseBooking,
+  updateStudentBookingStatus,
+} from "@/action/action";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -110,14 +114,38 @@ export default function BookingTable({ bookings }: { bookings: Booking[] }) {
     rating: number;
     comment: string;
   }) => {
-    const payload = {
-      tutorId: activeBooking?.tutorId,
-      studentId: activeBooking?.studentId,
-      comment: reviewData.comment,
-      rating: reviewData.rating,
-    };
-    console.log("Submitting Review Payload:", payload);
-    toast.success("Review submitted and session ended.");
+    if (!activeBooking) {
+      toast.error("No active booking found!");
+      return;
+    }
+    const toastId = toast.loading("Review loading...");
+    try {
+      const payload = {
+        tutorId: activeBooking.tutorId,
+        studentId: activeBooking.studentId,
+        bookingId: activeBooking.id,
+        comment: reviewData.comment,
+        rating: reviewData.rating,
+      };
+
+      const { success, message } = await postReviewAndCloseBooking(payload);
+
+      if (success) {
+        toast.success("Review submitted! The session is closed.", {
+          id: toastId,
+        });
+        setIsReviewOpen(false);
+        window.location.reload();
+      } else {
+        toast.error(message, {
+          id: toastId,
+        });
+      }
+    } catch (error) {
+      toast.error("An unexpected error occurred.", {
+        id: toastId,
+      });
+    }
   };
   return (
     <div className="border rounded-md m-4">
@@ -126,6 +154,7 @@ export default function BookingTable({ bookings }: { bookings: Booking[] }) {
           <TableRow>
             <TableHead>Amount</TableHead>
             <TableHead>Status</TableHead>
+            <TableHead>Attend</TableHead>
             <TableHead>Session Start</TableHead>
             <TableHead>Session End</TableHead>
             <TableHead className="text-right">Actions</TableHead>
@@ -149,6 +178,10 @@ export default function BookingTable({ bookings }: { bookings: Booking[] }) {
                     {booking.status}
                   </span>
                 </TableCell>
+                <TableCell>
+                  {booking.studentAttend ? "Attended" : "Not Attend"}
+                </TableCell>
+
                 <TableCell>{booking.startTime} PM</TableCell>
                 <TableCell>{booking.endTime} PM</TableCell>
 

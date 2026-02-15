@@ -2,7 +2,7 @@ import { env } from "@/env";
 import { cookies } from "next/headers";
 
 export const categoryService = {
-  getCategories: async function (searchTerm: string) {
+  getCategories: async function (searchTerm?: string) {
     try {
       const cookiesStore = await cookies();
       const res = await fetch(
@@ -81,7 +81,6 @@ export const categoryService = {
     id: string,
     updatedPayload: { name: string; icon: string },
   ) => {
-    console.log(id, updatedPayload);
     try {
       const res = await fetch(`${env.DATABASE_URL}/api/category/${id}/update`, {
         method: "PATCH",

@@ -21,9 +21,20 @@ export const tutorService = {
   },
 
   //================================ all tutors =================================
-  getAllTutors: async () => {
+  getAllTutors: async (params: string) => {
     try {
-      const res = await fetch(`${env.DATABASE_URL}/api/tutors`, {
+      const queryParams = new URLSearchParams();
+
+      if (params) {
+        Object.entries(params).forEach(([key, value]) => {
+          if (value) queryParams.append(key, value.toString());
+        });
+      }
+
+      const queryString = queryParams.toString();
+      const url = `${env.DATABASE_URL}/api/tutors${queryString ? `?${queryString}` : ""}`;
+
+      const res = await fetch(url, {
         cache: "no-store",
       });
 
@@ -35,6 +46,7 @@ export const tutorService = {
 
       return { data: data, error: null };
     } catch (error) {
+      console.error("Fetch Error:", error);
       return {
         data: null,
         error: "Server connection failed. Please try again.",
