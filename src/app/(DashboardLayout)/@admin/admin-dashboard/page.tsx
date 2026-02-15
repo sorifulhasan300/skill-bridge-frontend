@@ -4,7 +4,7 @@ import React from "react";
 
 export default async function AdminDashboard() {
   const { data, error } = await adminService.getStatistics();
-  console.log(data);
+  data;
   return (
     <div className="m-4">
       <StatsCards stats={data}></StatsCards>

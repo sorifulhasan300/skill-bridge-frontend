@@ -7,7 +7,7 @@ interface StatsCardsProps {
 }
 
 export function StatsCards({ stats }: StatsCardsProps) {
-  console.log(stats);
+  stats;
   const cards = [
     {
       title: "Total Revenue",

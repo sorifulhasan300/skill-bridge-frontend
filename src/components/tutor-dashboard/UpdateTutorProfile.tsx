@@ -80,7 +80,7 @@ export default function UpdateTutorProfile({
         }
 
         toast.success("Profile Updated Successfully!", { id: toastId });
-        console.log("Updated Data:", data);
+        ("Updated Data:", data);
       } catch (err) {
         toast.error("An unexpected error occurred.");
         console.error(err);

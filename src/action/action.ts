@@ -65,7 +65,7 @@ export const updateCategory = async (
     icon: string;
   },
 ) => {
-  console.log(updatedPayload, id);
+  (updatedPayload, id);
   const result = await categoryService.updateCategoryData(id, updatedPayload);
   return result;
 };
@@ -86,7 +86,6 @@ export const handleAttendance = async (
   return result;
 };
 export const postReviewAndCloseBooking = async (payload: ReviewPayload) => {
-  
   const result = await reviewService.postReviewAndCloseBooking(payload);
   return result;
 };

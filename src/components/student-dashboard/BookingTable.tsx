@@ -78,7 +78,7 @@ export default function BookingTable({ bookings }: { bookings: Booking[] }) {
     bookingId: string,
     currentAttendStatus: boolean,
   ) => {
-    console.log(bookingId, currentAttendStatus);
+    (bookingId, currentAttendStatus);
     const toastId = toast.loading("attend updating...");
 
     try {

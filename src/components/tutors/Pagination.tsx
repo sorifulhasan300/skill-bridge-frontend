@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export function TutorPagination({ totalPages }: { totalPages: number }) {
-  console.log(totalPages);
+  totalPages;
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;

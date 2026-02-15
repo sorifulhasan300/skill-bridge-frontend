@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 
 export const reviewService = {
   postReviewAndCloseBooking: async (reviewPayload: ReviewPayload) => {
-    console.log(reviewPayload);
+    reviewPayload;
     try {
       const cookiesStore = await cookies();
       const response = await fetch(`${env.DATABASE_URL}/api/review`, {

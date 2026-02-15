@@ -89,7 +89,7 @@ export const categoryService = {
         },
         body: JSON.stringify(updatedPayload),
       });
-      console.log(res);
+      res;
       const result = await res.json();
 
       if (!res.ok) {

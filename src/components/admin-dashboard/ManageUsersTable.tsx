@@ -43,7 +43,7 @@ import { cn } from "@/lib/utils";
 import { updateUserStatus } from "@/action/action";
 
 export default function ManageUsersTable({ users }: { users: User[] }) {
-  console.log(users);
+  users;
   const router = useRouter();
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<{

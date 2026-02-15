@@ -154,7 +154,7 @@ export const bookingService = {
     }
   },
   handleAttendance: async (bookingId: string, currentStatus: boolean) => {
-    console.log("student attending data", bookingId, currentStatus);
+    ("student attending data", bookingId, currentStatus);
 
     try {
       const Cookies = (await cookies()).toString();

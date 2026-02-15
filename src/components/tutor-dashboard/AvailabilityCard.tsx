@@ -33,7 +33,7 @@ export default function AvailabilityCard({
 }: {
   timeSlots: TimeSlot;
 }) {
-  console.log(timeSlots);
+  timeSlots;
   const [availability, setAvailability] = useState<WeeklyAvailability>(
     days.reduce((acc, day) => ({ ...acc, [day.value]: [] }), {}),
   );
@@ -86,7 +86,7 @@ export default function AvailabilityCard({
       }
 
       toast.success("Availability updated successfully!", { id: toastId });
-      console.log("Updated Data:", data);
+      ("Updated Data:", data);
     } catch (err) {
       toast.error("An unexpected error occurred.");
       console.error(err);
