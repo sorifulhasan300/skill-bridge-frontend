@@ -34,6 +34,38 @@ export const adminService = {
       };
     }
   },
+  getStatistics: async () => {
+    try {
+      const cookieStore = await cookies();
+      const allCookies = cookieStore.toString();
+
+      const res = await fetch(`${env.DATABASE_URL}/api/admin/statistics`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: allCookies,
+        },
+        next: { revalidate: 300 },
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        return {
+          data: null,
+          error: result.message || "Failed to fetch statistics",
+        };
+      }
+
+      return { data: result.data, error: null };
+    } catch (error) {
+      console.error("Fetch Statistics Error:", error);
+      return {
+        data: null,
+        error: "Network error. Please try again later.",
+      };
+    }
+  },
   updateUserStatus: async (id: string, newStatus: UserStatus) => {
     try {
       const cookieStore = await cookies();

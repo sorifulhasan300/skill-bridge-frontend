@@ -3,6 +3,11 @@ import { Users, CalendarCheck, LayoutGrid } from "lucide-react";
 
 export const adminRoutes: Route[] = [
   {
+    title: "Dashboard",
+    logo: Users,
+    url: "/admin-dashboard",
+  },
+  {
     title: "Manage Users",
     logo: Users,
     url: "/admin-dashboard/users",
