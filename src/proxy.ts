@@ -3,18 +3,21 @@ import { userService } from "./service/session.service";
 import { Roles } from "./constants/constants";
 
 export const proxy = async (request: NextRequest) => {
-  const { data } = await userService.getSession();
+  const { data: sessionData } = await userService.getSession();
   const pathName = request.nextUrl.pathname;
 
-  const authenticated = !!data;
-  const isAdmin = data?.user?.role === Roles.admin;
-  const isStudent = data?.user?.role === Roles.student;
-  const isTutor = data?.user?.role === Roles.tutor;
+  const authenticated = !!(sessionData && sessionData.user);
+
+  const userRole = sessionData?.user?.role;
+  const isAdmin = userRole === Roles.admin;
+  const isStudent = userRole === Roles.student;
+  const isTutor = userRole === Roles.tutor;
 
   if (!authenticated) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    if (pathName !== "/login" && pathName !== "/register") {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
   }
-
   // check admin Dashboard
   if (!isAdmin && pathName.startsWith("/admin-dashboard")) {
     if (isStudent) {
@@ -49,6 +52,7 @@ export const proxy = async (request: NextRequest) => {
 };
 export const config = {
   matcher: [
+    "/dashboard",
     "/admin-dashboard",
     "/admin-dashboard/:path*",
 

@@ -15,7 +15,6 @@ export const userService = {
         },
       );
       const session = await res.json();
-
       if (session === null) {
         return { data: null, error: "cookies not found" };
       }
