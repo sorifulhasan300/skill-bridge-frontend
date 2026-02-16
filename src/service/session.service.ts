@@ -5,15 +5,12 @@ export const userService = {
   getSession: async function () {
     try {
       const cookiesStore = await cookies();
-      const res = await fetch(
-        `${env.NEXT_PUBLIC_BACKEND_URL}/api/auth/get-session` as string,
-        {
-          headers: {
-            Cookie: cookiesStore.toString(),
-          },
-          cache: "no-store",
+      const res = await fetch(`${env.API_URL}/api/auth/get-session` as string, {
+        headers: {
+          Cookie: cookiesStore.toString(),
         },
-      );
+        cache: "no-store",
+      });
       const session = await res.json();
       if (session === null) {
         return { data: null, error: "cookies not found" };

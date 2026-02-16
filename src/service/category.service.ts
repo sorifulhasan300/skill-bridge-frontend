@@ -6,7 +6,7 @@ export const categoryService = {
     try {
       const cookiesStore = await cookies();
       const res = await fetch(
-        `${env.NEXT_PUBLIC_BACKEND_URL}/api/category${searchTerm ? `?search=${searchTerm}` : ""}` as string,
+        `${env.API_URL}/api/category${searchTerm ? `?search=${searchTerm}` : ""}` as string,
         {
           headers: {
             Cookie: cookiesStore.toString(),
@@ -30,7 +30,7 @@ export const categoryService = {
   allCategoriesAdmin: async function () {
     try {
       const cookiesStore = await cookies();
-      const res = await fetch(`${env.NEXT_PUBLIC_BACKEND_URL}/api/category`, {
+      const res = await fetch(`${env.API_URL}/api/category`, {
         headers: {
           Cookie: cookiesStore.toString(),
         },
@@ -53,17 +53,14 @@ export const categoryService = {
   createCategory: async (formData: { name: string; icon: string }) => {
     try {
       const cookiesStore = await cookies();
-      const response = await fetch(
-        `${env.NEXT_PUBLIC_BACKEND_URL}/api/category`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Cookie: cookiesStore.toString(),
-          },
-          body: JSON.stringify(formData),
+      const response = await fetch(`${env.API_URL}/api/category`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookiesStore.toString(),
         },
-      );
+        body: JSON.stringify(formData),
+      });
 
       const result = await response.json();
 
@@ -85,16 +82,13 @@ export const categoryService = {
     updatedPayload: { name: string; icon: string },
   ) => {
     try {
-      const res = await fetch(
-        `${env.NEXT_PUBLIC_BACKEND_URL}/api/category/${id}/update`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updatedPayload),
+      const res = await fetch(`${env.API_URL}/api/category/${id}/update`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify(updatedPayload),
+      });
       res;
       const result = await res.json();
 

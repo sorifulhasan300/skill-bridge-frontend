@@ -7,17 +7,14 @@ export const adminService = {
       const cookieStore = await cookies();
       const allCookies = cookieStore.toString();
 
-      const res = await fetch(
-        `${env.NEXT_PUBLIC_BACKEND_URL}/api/admin/users`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Cookie: allCookies,
-          },
-          next: { revalidate: 0 },
+      const res = await fetch(`${env.API_URL}/api/admin/users`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: allCookies,
         },
-      );
+        next: { revalidate: 0 },
+      });
 
       const result = await res.json();
 
@@ -42,17 +39,14 @@ export const adminService = {
       const cookieStore = await cookies();
       const allCookies = cookieStore.toString();
 
-      const res = await fetch(
-        `${env.NEXT_PUBLIC_BACKEND_URL}/api/admin/statistics`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Cookie: allCookies,
-          },
-          next: { revalidate: 300 },
+      const res = await fetch(`${env.API_URL}/api/admin/statistics`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: allCookies,
         },
-      );
+        next: { revalidate: 300 },
+      });
 
       const result = await res.json();
 
@@ -77,18 +71,15 @@ export const adminService = {
       const cookieStore = await cookies();
       const allCookies = cookieStore.toString();
 
-      const res = await fetch(
-        `${env.NEXT_PUBLIC_BACKEND_URL}/api/admin/users/${id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Cookie: allCookies,
-          },
-
-          body: JSON.stringify({ status: newStatus }),
+      const res = await fetch(`${env.API_URL}/api/admin/users/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: allCookies,
         },
-      );
+
+        body: JSON.stringify({ status: newStatus }),
+      });
 
       const result = await res.json();
 

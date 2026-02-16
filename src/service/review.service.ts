@@ -7,17 +7,14 @@ export const reviewService = {
     reviewPayload;
     try {
       const cookiesStore = await cookies();
-      const response = await fetch(
-        `${env.NEXT_PUBLIC_BACKEND_URL}/api/review`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Cookie: cookiesStore.toString(),
-          },
-          body: JSON.stringify(reviewPayload),
+      const response = await fetch(`${env.API_URL}/api/review`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookiesStore.toString(),
         },
-      );
+        body: JSON.stringify(reviewPayload),
+      });
 
       const data = await response.json();
 

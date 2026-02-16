@@ -33,7 +33,6 @@ import { DropdownMenuAvatar } from "./Avatar";
 import { Roles } from "@/constants/constants";
 import { Spinner } from "../ui/spinner";
 import { useAuth } from "@/context/auth-context";
-import { logout } from "@/service/logout.service";
 
 interface MenuItem {
   title: string;
@@ -57,7 +56,6 @@ interface Navbar1Props {
 }
 
 const Navbar = ({
-  logo = { url: "/", title: "TutorHub" },
   menu = [
     { title: "Home", url: "/" },
     { title: "Tutors", url: "/tutors" },
@@ -71,12 +69,10 @@ const Navbar = ({
   className,
 }: Navbar1Props) => {
   const pathname = usePathname();
-  const router = useRouter();
   const authContext = useAuth();
   const session = authContext?.session;
   const isLoading = authContext?.isLoading || false;
   const role = session?.user?.role;
-
   // --- Helper: Render Desktop Menu ---
   const renderMenuItem = (item: MenuItem) => {
     if (item.items) {
@@ -266,11 +262,7 @@ const Navbar = ({
                           Dashboard <ArrowRight className="h-4 w-4" />
                         </Link>
                       </Button>
-                      <Button
-                        variant="destructive"
-                        className="w-full"
-                        onClick={() => logout()}
-                      >
+                      <Button variant="destructive" className="w-full">
                         Logout
                       </Button>
                     </>

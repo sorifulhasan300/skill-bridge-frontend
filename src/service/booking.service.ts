@@ -8,15 +8,12 @@ export const bookingService = {
       const cookieStore = await cookies();
       const allCookies = cookieStore.toString();
 
-      const res = await fetch(
-        `${env.NEXT_PUBLIC_BACKEND_URL}/api/bookings/student`,
-        {
-          headers: {
-            Cookie: allCookies,
-          },
-          cache: "no-store",
+      const res = await fetch(`${env.API_URL}/api/bookings/student`, {
+        headers: {
+          Cookie: allCookies,
         },
-      );
+        cache: "no-store",
+      });
 
       if (!res.ok) {
         return { data: null, error: "failed to fetch booking" };
@@ -36,15 +33,12 @@ export const bookingService = {
       const cookieStore = await cookies();
       const allCookies = cookieStore.toString();
 
-      const res = await fetch(
-        `${env.NEXT_PUBLIC_BACKEND_URL}/api/bookings/tutor`,
-        {
-          headers: {
-            Cookie: allCookies,
-          },
-          cache: "no-store",
+      const res = await fetch(`${env.API_URL}/api/bookings/tutor`, {
+        headers: {
+          Cookie: allCookies,
         },
-      );
+        cache: "no-store",
+      });
 
       if (!res.ok) {
         return { data: null, error: "failed to fetch booking" };
@@ -65,15 +59,12 @@ export const bookingService = {
       const cookieStore = await cookies();
       const allCookies = cookieStore.toString();
 
-      const res = await fetch(
-        `${env.NEXT_PUBLIC_BACKEND_URL}/api/bookings/admin`,
-        {
-          headers: {
-            Cookie: allCookies,
-          },
-          cache: "no-store",
+      const res = await fetch(`${env.API_URL}/api/bookings/admin`, {
+        headers: {
+          Cookie: allCookies,
         },
-      );
+        cache: "no-store",
+      });
 
       if (!res.ok) {
         return { data: null, error: "failed to fetch booking" };
@@ -94,17 +85,14 @@ export const bookingService = {
     const Cookies = cookieStore.toString();
 
     try {
-      const res = await fetch(
-        `${env.NEXT_PUBLIC_BACKEND_URL}/api/bookings/${bookingId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Cookie: Cookies,
-          },
-          body: JSON.stringify({ status: status }),
+      const res = await fetch(`${env.API_URL}/api/bookings/${bookingId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: Cookies,
         },
-      );
+        body: JSON.stringify({ status: status }),
+      });
 
       const contentType = res.headers.get("content-type");
       let result;
@@ -133,17 +121,14 @@ export const bookingService = {
   CreateBooking: async (payload: BookingPayload) => {
     const Cookies = (await cookies()).toString();
     try {
-      const response = await fetch(
-        `${env.NEXT_PUBLIC_BACKEND_URL}/api/bookings`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Cookie: Cookies,
-          },
-          body: JSON.stringify(payload),
+      const response = await fetch(`${env.API_URL}/api/bookings`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: Cookies,
         },
-      );
+        body: JSON.stringify(payload),
+      });
 
       const data = await response.json();
 
@@ -173,7 +158,7 @@ export const bookingService = {
       const Cookies = (await cookies()).toString();
 
       const response = await fetch(
-        `${env.NEXT_PUBLIC_BACKEND_URL}/api/bookings/${bookingId}/attend/`,
+        `${env.API_URL}/api/bookings/${bookingId}/attend/`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json", Cookie: Cookies },

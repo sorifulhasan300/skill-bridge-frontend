@@ -1,5 +1,4 @@
 "use client";
-import { getSession } from "@/action/action";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
