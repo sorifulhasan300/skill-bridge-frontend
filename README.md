@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎓 TutorHub - Empowering Your Learning Journey
 
-## Getting Started
+**TutorHub** is a premium tutor booking platform designed to bridge the gap between students and expert educators. It offers a one-stop solution where students can discover mentors based on subjects and book sessions instantly using real-time scheduling.
 
-First, run the development server:
+🚀 **[Live Demo](YOUR_LIVE_LINK_HERE)**
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🌟 Overview
+TutorHub is more than just a directory; it's a complete learning ecosystem. By utilizing advanced search algorithms and role-based dashboards, students can easily verify tutor profiles, while tutors can efficiently manage their students based on their expertise and availability.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 💡 Problems Solved
+- **Mentor Discovery:** Simplifies finding the right mentor from thousands of data points by filtering for specific subjects and budgets.
+- **Booking Friction:** Eliminates back-and-forth messaging with dynamic time-slot management, allowing direct session booking.
+- **Transparency:** Displays honest ratings, student reviews, and verified experience for every tutor.
+- **Accessibility:** Fully responsive design with Dark/Light mode support, accessible from any device (Mobile/Tablet/Desktop).
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## ✨ Key Features
+* **Role-Based Access Control (RBAC):** Dedicated dashboards and privileges for Admins, Tutors, and Students.
+* **Dynamic Slot Management:** Tutors can create, manage, and delete time slots based on their real-time availability.
+* **Advanced Search & Filter:** Filter tutors by subject, price range, and years of experience.
+* **Featured Tutors Section:** Special homepage highlights for top-rated educators.
+* **Secure Authentication:** Cookie-based secure login system powered by JWT.
+* **Modern UI/UX:** Minimalist and clean design built with Shadcn UI and Tailwind CSS.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🛠️ Tech Stack
+| Frontend | Backend | Database & Tools |
+| :--- | :--- | :--- |
+| Next.js (App Router) | Type Script | Node.js | Prisma / Postgresql |
+| Tailwind CSS | Express.js | Zod (Validation) |
+| Shadcn/UI | Better Auth | Lucide Icons |
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🔑 Demo Credentials
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Explore the platform using the following test accounts:
+
+### 🛡️ Admin Access
+- **Email:** `admin@gmail.com`
+- **Password:** `admin@gmail.com`
+
+### 👨‍🎓 Student Access
+- **Email:** `sorifullhasan400@gmail.com`
+- **Password:** `afab234Wfdfs`
+
+### 👨‍🏫 Tutor Access
+- **Email:** `tutor123@gmail.com`
+- **Password:** `tutor123@gmail.com`
+
+---
+
+## 🚀 Installation & Setup
+
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/sorifulhasan300/skill-bridge-frontend.git](https://github.com/sorifulhasan300/skill-bridge-frontend.git)
