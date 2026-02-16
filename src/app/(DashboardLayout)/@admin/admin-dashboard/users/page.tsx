@@ -1,6 +1,7 @@
 import { getAllUsers } from "@/action/action";
 import ManageUsersTable from "@/components/admin-dashboard/ManageUsersTable";
 import React from "react";
+export const dynamic = "force-dynamic";
 
 export default async function ManageUsersPage() {
   const { data, error } = await getAllUsers();

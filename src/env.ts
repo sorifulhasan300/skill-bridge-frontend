@@ -3,13 +3,14 @@ import { createEnv } from "@t3-oss/env-nextjs";
 
 export const env = createEnv({
   server: {
-    DATABASE_URL: z.url(),
     SESSION_URL: z.url(),
     FRONTEND_URL: z.url(),
   },
-  client: {},
+  client: {
+    NEXT_PUBLIC_BACKEND_URL: z.url(),
+  },
   runtimeEnv: {
-    DATABASE_URL: process.env.DATABASE_URL,
+    NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL,
     SESSION_URL: process.env.SESSION_URL,
     FRONTEND_URL: process.env.FRONTEND_URL,
   },

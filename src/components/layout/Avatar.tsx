@@ -29,6 +29,7 @@ export function DropdownMenuAvatar() {
           toast.success("Signed out successfully");
           router.push("/login");
           if (refreshAuth) await refreshAuth();
+          auth?.setSession(null);
         },
         onError: (ctx) => {
           toast.error(ctx.error.message || "Something went wrong");

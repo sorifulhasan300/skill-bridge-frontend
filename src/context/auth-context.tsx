@@ -19,7 +19,7 @@ export const AuthProvider = ({
   children: React.ReactNode;
   initialSession: Session;
 }) => {
-  const [session, setSession] = useState<Session | null>(initialSession);
+  const [session, setSession] = useState<Session | null>(null);
 
   const [isLoading, setIsLoading] = useState(true);
 

@@ -4,9 +4,12 @@ import { cookies } from "next/headers";
 export const tutorService = {
   getFeaturedTutors: async () => {
     try {
-      const res = await fetch(`${env.DATABASE_URL}/api/tutors/featured`, {
-        cache: "no-store",
-      });
+      const res = await fetch(
+        `${env.NEXT_PUBLIC_BACKEND_URL}/api/tutors/featured`,
+        {
+          cache: "no-store",
+        },
+      );
 
       if (!res.ok) {
         return { data: null, error: "Failed to fetch tutors" };
@@ -32,7 +35,7 @@ export const tutorService = {
       }
 
       const queryString = queryParams.toString();
-      const url = `${env.DATABASE_URL}/api/tutors${queryString ? `?${queryString}` : ""}`;
+      const url = `${env.NEXT_PUBLIC_BACKEND_URL}/api/tutors${queryString ? `?${queryString}` : ""}`;
 
       const res = await fetch(url, {
         cache: "no-store",
@@ -56,9 +59,12 @@ export const tutorService = {
 
   getTutorById: async (id: string) => {
     try {
-      const res = await fetch(`${env.DATABASE_URL}/api/tutors/${id}`, {
-        cache: "no-store",
-      });
+      const res = await fetch(
+        `${env.NEXT_PUBLIC_BACKEND_URL}/api/tutors/${id}`,
+        {
+          cache: "no-store",
+        },
+      );
 
       if (!res.ok) {
         return { data: null, error: "Failed to fetch tutors" };
@@ -78,12 +84,15 @@ export const tutorService = {
   getTutorProfile: async () => {
     try {
       const cookiesStore = await cookies();
-      const res = await fetch(`${env.DATABASE_URL}/api/tutors/tutor/profile`, {
-        headers: {
-          Cookie: cookiesStore.toString(),
+      const res = await fetch(
+        `${env.NEXT_PUBLIC_BACKEND_URL}/api/tutors/tutor/profile`,
+        {
+          headers: {
+            Cookie: cookiesStore.toString(),
+          },
+          cache: "no-store",
         },
-        cache: "no-store",
-      });
+      );
 
       const result = await res.json();
 
@@ -107,15 +116,18 @@ export const tutorService = {
   updateTutorProfile: async (payload: Record<string, unknown>) => {
     try {
       const cookiesStore = await cookies();
-      const res = await fetch(`${env.DATABASE_URL}/api/tutors/update/profile`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: cookiesStore.toString(),
+      const res = await fetch(
+        `${env.NEXT_PUBLIC_BACKEND_URL}/api/tutors/update/profile`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Cookie: cookiesStore.toString(),
+          },
+          body: JSON.stringify(payload),
+          cache: "no-store",
         },
-        body: JSON.stringify(payload),
-        cache: "no-store",
-      });
+      );
 
       const result = await res.json();
 
@@ -139,15 +151,18 @@ export const tutorService = {
   createTutorProfile: async (payload: Record<string, unknown>) => {
     try {
       const cookiesStore = await cookies();
-      const res = await fetch(`${env.DATABASE_URL}/api/tutors/create-profile`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: cookiesStore.toString(),
+      const res = await fetch(
+        `${env.NEXT_PUBLIC_BACKEND_URL}/api/tutors/create-profile`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Cookie: cookiesStore.toString(),
+          },
+          body: JSON.stringify(payload),
+          cache: "no-store",
         },
-        body: JSON.stringify(payload),
-        cache: "no-store",
-      });
+      );
 
       const result = await res.json();
       result;
