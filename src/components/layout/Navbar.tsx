@@ -1,7 +1,14 @@
 "use client";
 
-import { GraduationCap, Menu, ArrowRight } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
+import React, { useState } from "react";
+import {
+  GraduationCap,
+  Menu,
+  ArrowRight,
+  LogOut,
+  LayoutDashboard,
+} from "lucide-react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
@@ -14,11 +21,11 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
+  NavigationMenuContent,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import {
@@ -42,13 +49,8 @@ interface MenuItem {
   items?: MenuItem[];
 }
 
-interface Navbar1Props {
+interface NavbarProps {
   className?: string;
-  logo?: {
-    url: string;
-    title: string;
-  };
-  menu?: MenuItem[];
   auth?: {
     login: { title: string; url: string };
     signup: { title: string; url: string };
@@ -56,117 +58,28 @@ interface Navbar1Props {
 }
 
 const Navbar = ({
-  menu = [
-    { title: "Home", url: "/" },
-    { title: "Tutors", url: "/tutors" },
-    { title: "Careers", url: "/careers" },
-    { title: "Support", url: "/support" },
-  ],
   auth = {
     login: { title: "Login", url: "/login" },
     signup: { title: "Sign up", url: "/signup" },
   },
   className,
-}: Navbar1Props) => {
+}: NavbarProps) => {
   const pathname = usePathname();
   const authContext = useAuth();
   const session = authContext?.session;
   const isLoading = authContext?.isLoading || false;
+  const [isOpen, setIsOpen] = useState(false); // মোবাইল মেনু স্টেট
   const role = session?.user?.role;
-  // --- Helper: Render Desktop Menu ---
-  const renderMenuItem = (item: MenuItem) => {
-    if (item.items) {
-      const isSubActive = item.items.some((sub) => pathname === sub.url);
-      return (
-        <NavigationMenuItem key={item.title}>
-          <NavigationMenuTrigger
-            className={cn(
-              isSubActive && "bg-muted text-foreground font-semibold",
-            )}
-          >
-            {item.title}
-          </NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid w-80 p-2">
-              {item.items.map((subItem) => (
-                <NavigationMenuLink asChild key={subItem.title}>
-                  <SubMenuLink
-                    item={subItem}
-                    isActive={pathname === subItem.url}
-                  />
-                </NavigationMenuLink>
-              ))}
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-      );
-    }
 
-    const isActive = pathname === item.url;
-    return (
-      <NavigationMenuItem key={item.title}>
-        <Link href={item.url} legacyBehavior passHref>
-          <NavigationMenuLink
-            className={cn(
-              navigationMenuTriggerStyle(),
-              isActive
-                ? "bg-muted text-foreground font-bold"
-                : "text-muted-foreground",
-            )}
-          >
-            {item.title}
-          </NavigationMenuLink>
-        </Link>
-      </NavigationMenuItem>
-    );
-  };
+  const menu: MenuItem[] = [
+    { title: "Home", url: "/" },
+    { title: "Tutors", url: "/tutors" },
+    { title: "Careers", url: "/careers" },
+    { title: "Support", url: "/support" },
+  ];
 
-  // --- Helper: Render Mobile Menu ---
-  const renderMobileMenuItem = (item: MenuItem) => {
-    const isActive = pathname === item.url;
-    if (item.items) {
-      return (
-        <AccordionItem
-          key={item.title}
-          value={item.title}
-          className="border-b-0"
-        >
-          <AccordionTrigger className="py-2 text-base font-semibold hover:no-underline">
-            {item.title}
-          </AccordionTrigger>
-          <AccordionContent className="flex flex-col gap-2 ml-4 border-l pl-4">
-            {item.items.map((subItem) => (
-              <Link
-                key={subItem.title}
-                href={subItem.url}
-                className={cn(
-                  "text-sm py-1 transition-colors",
-                  pathname === subItem.url
-                    ? "text-primary font-bold"
-                    : "text-muted-foreground",
-                )}
-              >
-                {subItem.title}
-              </Link>
-            ))}
-          </AccordionContent>
-        </AccordionItem>
-      );
-    }
-
-    return (
-      <Link
-        key={item.title}
-        href={item.url}
-        className={cn(
-          "text-base font-semibold py-2 rounded-md transition-all",
-          isActive ? "text-primary translate-x-1" : "text-foreground",
-        )}
-      >
-        {item.title}
-      </Link>
-    );
-  };
+  // মোবাইল মেনু ক্লোজ করার ফাংশন
+  const closeMenu = () => setIsOpen(false);
 
   return (
     <section
@@ -178,32 +91,47 @@ const Navbar = ({
       <div className="container mx-auto px-4">
         <nav className="flex items-center justify-between">
           {/* Brand Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
+          <Link href="/" className="flex items-center gap-2 group shrink-0">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary transition-transform group-hover:scale-105">
               <GraduationCap className="h-6 w-6 text-primary-foreground" />
             </div>
-            <span className="text-xl font-bold tracking-tight hidden sm:block">
+            <span className="text-xl font-bold tracking-tight block">
               TutorHub
             </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center">
+          <div className="hidden lg:flex items-center flex-1 justify-center">
             <NavigationMenu>
               <NavigationMenuList>
-                {menu?.map((item) => renderMenuItem(item))}
+                {menu.map((item) => (
+                  <NavigationMenuItem key={item.title}>
+                    <Link href={item.url} legacyBehavior passHref>
+                      <NavigationMenuLink
+                        className={cn(
+                          navigationMenuTriggerStyle(),
+                          pathname === item.url
+                            ? "bg-muted text-foreground font-bold"
+                            : "text-muted-foreground",
+                        )}
+                      >
+                        {item.title}
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
+                ))}
               </NavigationMenuList>
             </NavigationMenu>
           </div>
 
           {/* Right Actions */}
-          <div className="flex items-center gap-3">
-            <div className="hidden sm:block">
+          <div className="flex items-center gap-2">
+            <div className="hidden md:block">
               <ModeToggle />
             </div>
 
             {isLoading ? (
-              <Spinner />
+              <Spinner className="h-5 w-5" />
             ) : session ? (
               <DropdownMenuAvatar />
             ) : (
@@ -217,14 +145,17 @@ const Navbar = ({
               </div>
             )}
 
-            {/* Mobile Sheet Trigger */}
-            <Sheet>
+            {/* Mobile Menu Trigger */}
+            <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="lg:hidden">
                   <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-[300px] flex flex-col">
+              <SheetContent
+                side="right"
+                className="w-[300px] flex flex-col p-6"
+              >
                 <SheetHeader className="text-left border-b pb-4">
                   <SheetTitle className="flex items-center gap-2">
                     <GraduationCap className="h-6 w-6 text-primary" />
@@ -232,23 +163,41 @@ const Navbar = ({
                   </SheetTitle>
                 </SheetHeader>
 
-                <div className="flex flex-col gap-4 mt-6 flex-grow">
-                  <Accordion type="single" collapsible className="w-full">
-                    {menu?.map((item) => renderMobileMenuItem(item))}
-                  </Accordion>
+                {/* Mobile Menu Items */}
+                <div className="flex flex-col gap-2 mt-6 overflow-y-auto flex-grow">
+                  {menu.map((item) => (
+                    <Link
+                      key={item.title}
+                      href={item.url}
+                      onClick={closeMenu}
+                      className={cn(
+                        "text-base font-semibold py-3 border-b border-transparent transition-all",
+                        pathname === item.url
+                          ? "text-primary ml-1"
+                          : "text-foreground",
+                      )}
+                    >
+                      {item.title}
+                    </Link>
+                  ))}
                 </div>
 
-                <div className="border-t pt-6 space-y-3">
-                  <div className="flex justify-between items-center mb-4">
-                    <span className="text-sm font-medium">Theme</span>
+                {/* Mobile Bottom Section */}
+                <div className="border-t pt-6 space-y-4">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-sm font-medium text-muted-foreground">
+                      Theme
+                    </span>
                     <ModeToggle />
                   </div>
+
                   {session ? (
-                    <>
+                    <div className="grid gap-2">
                       <Button
-                        className="w-full justify-start gap-2"
+                        className="w-full justify-between"
                         variant="secondary"
                         asChild
+                        onClick={closeMenu}
                       >
                         <Link
                           href={
@@ -259,22 +208,19 @@ const Navbar = ({
                                 : "/student-dashboard"
                           }
                         >
-                          Dashboard <ArrowRight className="h-4 w-4" />
+                          Dashboard <LayoutDashboard className="h-4 w-4" />
                         </Link>
                       </Button>
-                      <Button variant="destructive" className="w-full">
-                        Logout
-                      </Button>
-                    </>
+                    </div>
                   ) : (
-                    <>
-                      <Button asChild variant="outline" className="w-full">
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button asChild variant="outline" onClick={closeMenu}>
                         <Link href={auth.login.url}>{auth.login.title}</Link>
                       </Button>
-                      <Button asChild className="w-full">
+                      <Button asChild onClick={closeMenu}>
                         <Link href={auth.signup.url}>{auth.signup.title}</Link>
                       </Button>
-                    </>
+                    </div>
                   )}
                 </div>
               </SheetContent>
@@ -283,41 +229,6 @@ const Navbar = ({
         </nav>
       </div>
     </section>
-  );
-};
-
-const SubMenuLink = ({
-  item,
-  isActive,
-}: {
-  item: MenuItem;
-  isActive: boolean;
-}) => {
-  return (
-    <Link
-      href={item.url}
-      className={cn(
-        "flex flex-col gap-1 rounded-md p-3 leading-none no-underline transition-colors outline-none select-none",
-        isActive ? "bg-muted" : "hover:bg-muted",
-      )}
-    >
-      <div className="flex items-center gap-2">
-        {item.icon && <span className="text-primary">{item.icon}</span>}
-        <div
-          className={cn(
-            "text-sm font-semibold",
-            isActive ? "text-primary" : "text-foreground",
-          )}
-        >
-          {item.title}
-        </div>
-      </div>
-      {item.description && (
-        <p className="text-xs leading-snug text-muted-foreground line-clamp-2">
-          {item.description}
-        </p>
-      )}
-    </Link>
   );
 };
 
