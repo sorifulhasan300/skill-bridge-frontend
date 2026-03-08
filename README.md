@@ -2,7 +2,7 @@
 
 **TutorHub** is a premium tutor booking platform designed to bridge the gap between students and expert educators. It offers a one-stop solution where students can discover mentors based on subjects and book sessions instantly using real-time scheduling.
 
-🚀 **[Live Demo](YOUR_LIVE_LINK_HERE)**
+🚀 **[Live Demo](https://skill-bridge-frontend-amber.vercel.app/)**
 
 ---
 
