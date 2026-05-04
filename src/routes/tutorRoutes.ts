@@ -6,13 +6,14 @@ import {
   UserCircle,
   Clock,
   LayoutDashboard,
+  Eye,
 } from "lucide-react";
 
 export const tutorRoutes: Route[] = [
   {
-    title: "Dashboard", 
+    title: "Dashboard",
     logo: LayoutDashboard,
-    url: "/tutor-dashboard", 
+    url: "/tutor-dashboard",
   },
   {
     title: "Bookings",
@@ -23,6 +24,11 @@ export const tutorRoutes: Route[] = [
     title: "Set Availability",
     logo: Clock,
     url: "/tutor-dashboard/set-availability",
+  },
+  {
+    title: "Set Visibility",
+    logo: Eye,
+    url: "/tutor-dashboard/set-visibility",
   },
   {
     title: "Create Profile",

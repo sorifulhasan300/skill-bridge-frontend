@@ -19,33 +19,8 @@ import { adminRoutes } from "@/routes/adminRoutes";
 import { tutorRoutes } from "@/routes/tutorRoutes";
 import { studentRoutes } from "@/routes/studentRoutes";
 import { Logo } from "./logo";
-
 // This is sample data.
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
 
-  navMain: [
-    {
-      title: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      title: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      title: "Travel",
-      url: "#",
-      icon: Map,
-    },
-  ],
-};
 
 export function AppSidebar({
   user,
@@ -75,7 +50,7 @@ export function AppSidebar({
         <NavMain items={routes} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

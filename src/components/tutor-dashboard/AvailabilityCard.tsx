@@ -7,12 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { updateTutorProfile } from "@/action/action";
-
-interface TimeSlot {
-  id: string;
-  start: string;
-  end: string;
-}
+import { TimeSlot, TimeSlots } from "@/types/tutor.types";
 
 interface WeeklyAvailability {
   [key: string]: TimeSlot[];
@@ -31,18 +26,31 @@ const days = [
 export default function AvailabilityCard({
   timeSlots,
 }: {
-  timeSlots: TimeSlot;
+  timeSlots: TimeSlots;
 }) {
-  timeSlots;
-  const [availability, setAvailability] = useState<WeeklyAvailability>(
-    days.reduce((acc, day) => ({ ...acc, [day.value]: [] }), {}),
-  );
+  const [availability, setAvailability] = useState<WeeklyAvailability>(() => {
+    const defaultAvailability = days.reduce(
+      (acc, day) => ({ ...acc, [day.value]: [] }),
+      {},
+    );
+    if (!timeSlots) return defaultAvailability;
+
+    // Merge provided timeSlots with default structure to ensure all days exist
+    return days.reduce(
+      (acc, day) => ({
+        ...acc,
+        [day.value]: timeSlots[day.value as keyof typeof timeSlots] || [],
+      }),
+      {},
+    );
+  });
 
   const addSlot = (day: string) => {
     const newSlot: TimeSlot = {
       id: crypto.randomUUID(),
       start: "09:00",
       end: "10:00",
+      isBooked: false,
     };
     setAvailability((prev) => ({
       ...prev,
@@ -117,7 +125,7 @@ export default function AvailabilityCard({
               </Button>
             </div>
 
-            {availability[day.value].length === 0 ? (
+            {(availability[day.value] || []).length === 0 ? (
               <p className="text-xs text-muted-foreground italic">
                 No slots added
               </p>

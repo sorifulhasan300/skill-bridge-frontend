@@ -74,6 +74,8 @@ const Navbar = ({
   const menu: MenuItem[] = [
     { title: "Home", url: "/" },
     { title: "Tutors", url: "/tutors" },
+    { title: "About", url: "/about" },
+    { title: "Resources", url: "/resources" },
     { title: "Careers", url: "/careers" },
     { title: "Support", url: "/support" },
   ];
@@ -106,7 +108,7 @@ const Navbar = ({
               <NavigationMenuList>
                 {menu.map((item) => (
                   <NavigationMenuItem key={item.title}>
-                    <Link href={item.url} legacyBehavior passHref>
+                    <Link href={item.url}>
                       <NavigationMenuLink
                         className={cn(
                           navigationMenuTriggerStyle(),

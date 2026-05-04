@@ -1,5 +1,5 @@
 import { env } from "@/env";
-import { BookingPayload } from "@/types/booking.typs";
+import { BookingPayload, QueryOptions } from "@/types/booking.typs";
 import { cookies } from "next/headers";
 
 export const bookingService = {
@@ -54,12 +54,46 @@ export const bookingService = {
     }
   },
 
-  getAdminBookings: async () => {
+  getAdminBookings: async (queryOptions?: QueryOptions) => {
     try {
       const cookieStore = await cookies();
       const allCookies = cookieStore.toString();
 
-      const res = await fetch(`${env.API_URL}/api/bookings/admin`, {
+      let url = `${env.API_URL}/api/bookings/admin`;
+      const params = new URLSearchParams();
+
+      if (queryOptions?.search) {
+        params.append('search', queryOptions.search);
+      }
+
+      if (queryOptions?.filters) {
+        Object.entries(queryOptions.filters).forEach(([key, value]) => {
+          params.append(`filters[${key}]`, value);
+        });
+      }
+
+      if (queryOptions?.sort) {
+        Object.entries(queryOptions.sort).forEach(([key, value]) => {
+          params.append(`sort[${key}]`, value);
+        });
+      }
+
+      if (queryOptions?.pagination) {
+        params.append('page', queryOptions.pagination.page.toString());
+        params.append('limit', queryOptions.pagination.limit.toString());
+      }
+
+      if (queryOptions?.includes) {
+        Object.entries(queryOptions.includes).forEach(([key, value]) => {
+          if (value) params.append(`includes[${key}]`, 'true');
+        });
+      }
+
+      if (params.toString()) {
+        url += `?${params.toString()}`;
+      }
+
+      const res = await fetch(url, {
         headers: {
           Cookie: allCookies,
         },

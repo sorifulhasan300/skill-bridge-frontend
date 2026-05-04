@@ -6,21 +6,31 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Roles } from "@/constants/constants";
 import { useAuth } from "@/context/auth-context";
 import { authClient } from "@/lib/auth-client";
-import { BadgeCheckIcon, LogOutIcon } from "lucide-react";
+import { BadgeCheck, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+
+type ExtendedUser = {
+  id: string;
+  email: string;
+  image: string;
+  role: "ADMIN" | "STUDENT" | "TUTOR";
+  name?: string;
+};
 export function DropdownMenuAvatar() {
   const auth = useAuth();
   const session = auth?.session;
   const refreshAuth = auth?.refreshAuth;
   const router = useRouter();
-  const role = session?.user?.role;
+  const user = session?.user as ExtendedUser;
+  const role = user?.role;
   const handleSignOut = async () => {
     await authClient.signOut({
       fetchOptions: {
@@ -39,14 +49,31 @@ export function DropdownMenuAvatar() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="rounded-full">
-          <Avatar>
-            <AvatarImage src={session?.user.image} alt="profile" />
-            <AvatarFallback>LR</AvatarFallback>
+        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+          <Avatar className="h-8 w-8">
+            <AvatarImage src={user?.image} alt={user?.name || user?.email} />
+            <AvatarFallback className="rounded-lg">{(user?.name || user?.email)?.charAt(0).toUpperCase()}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent
+        className="w-56 rounded-lg"
+        align="end"
+        sideOffset={4}
+      >
+        <DropdownMenuLabel className="p-0 font-normal">
+          <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+            <Avatar className="h-8 w-8 rounded-lg">
+              <AvatarImage src={user?.image} alt={user?.name || user?.email} />
+              <AvatarFallback className="rounded-lg">{(user?.name || user?.email)?.charAt(0).toUpperCase()}</AvatarFallback>
+            </Avatar>
+            <div className="grid flex-1 text-left text-sm leading-tight">
+              <span className="truncate font-medium">{user?.name || user?.email}</span>
+              <span className="truncate text-xs">{user?.email}</span>
+            </div>
+          </div>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem
             onClick={() => {
@@ -54,16 +81,15 @@ export function DropdownMenuAvatar() {
               else if (role === Roles.tutor) router.push("/tutor-dashboard");
               else router.push("/student-dashboard");
             }}
-            className="flex items-center gap-2"
           >
-            <BadgeCheckIcon />
+            <BadgeCheck />
             Dashboard
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleSignOut}>
-          <LogOutIcon />
-          Sign Out
+          <LogOut />
+          Log out
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

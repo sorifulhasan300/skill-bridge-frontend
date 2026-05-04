@@ -1,10 +1,10 @@
-import UpdateTutorProfile from "@/components/tutor-dashboard/UpdateTutorProfile";
+import VisibilityToggle from "@/components/tutor-dashboard/VisibilityToggle";
 import { tutorService } from "@/service/tutors.service";
 import React from "react";
 import { Button } from "@/components/ui/button";
 export const dynamic = "force-dynamic";
 
-export default async function page() {
+export default async function SetVisibilityPage() {
   const { data, error } = await tutorService.getTutorProfile();
 
   if (error) {
@@ -35,7 +35,7 @@ export default async function page() {
               {error}
             </p>
             <p className="text-sm text-gray-500">
-              Please create your tutor profile first to manage your profile settings.
+              Please create your tutor profile first to manage your visibility settings.
             </p>
           </div>
           <div className="space-y-3">
@@ -70,8 +70,15 @@ export default async function page() {
   }
 
   return (
-    <div>
-      <UpdateTutorProfile initialData={data}></UpdateTutorProfile>
+    <div className="max-w-2xl mx-auto p-6">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Set Visibility</h1>
+        <p className="text-gray-600">
+          Control your online visibility and availability status for students.
+        </p>
+      </div>
+
+      <VisibilityToggle currentStatus={data?.availability || "UNAVAILABLE"} />
     </div>
   );
 }
