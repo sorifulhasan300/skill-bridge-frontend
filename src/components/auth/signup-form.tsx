@@ -21,6 +21,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import * as z from "zod";
 import { authClient } from "@/lib/auth-client";
+import { Mail } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string("").min(5, "password must be at least 5 characters."),
@@ -43,7 +44,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
-      const toastId = toast.loading("login...");
+      const toastId = toast.loading("Creating account...");
       try {
         const { data, error } = await authClient.signUp.email(value);
         if (error) {
@@ -57,6 +58,27 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
       }
     },
   });
+
+  const handleGmailSignup = async () => {
+    // const toastId = toast.loading("Redirecting to Gmail...");
+    // try {
+    //   const { data, error } = await authClient.signUp.social({
+    //     provider: "google",
+    //   });
+    //   if (error) {
+    //     toast.error(error.message, { id: toastId });
+    //     return;
+    //   }
+    //   toast.success("Account created successfully", { id: toastId });
+    //   router.push("/login");
+    // } catch (error) {
+    //   toast.error("Something was wrong", { id: toastId });
+    // }
+    toast.info(
+      "Currently, Gmail signup is not available. Please use email and password to create an account.",
+    );
+    return;
+  };
   return (
     <Card {...props}>
       <CardHeader>
@@ -66,6 +88,29 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
         </CardDescription>
       </CardHeader>
       <CardContent>
+        <div className="flex flex-col gap-4 mb-4">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleGmailSignup}
+            className="w-full"
+          >
+            <Mail className="mr-2 h-4 w-4" />
+            Continue with Gmail
+          </Button>
+        </div>
+
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background px-2 text-muted-foreground">
+              Or continue with
+            </span>
+          </div>
+        </div>
+
         <form
           id="signup-form"
           onSubmit={(e) => {
