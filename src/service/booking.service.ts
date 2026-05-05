@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { env } from "@/env";
 import { BookingPayload, QueryOptions } from "@/types/booking.typs";
 import { cookies } from "next/headers";
@@ -59,54 +60,48 @@ export const bookingService = {
       const cookieStore = await cookies();
       const allCookies = cookieStore.toString();
 
-      let url = `${env.API_URL}/api/bookings/admin`;
       const params = new URLSearchParams();
 
+      // ?search=xyz
       if (queryOptions?.search) {
-        params.append('search', queryOptions.search);
+        params.append("search", queryOptions.search);
       }
 
+      // ?filters[status]=CONFIRMED
       if (queryOptions?.filters) {
         Object.entries(queryOptions.filters).forEach(([key, value]) => {
-          params.append(`filters[${key}]`, value);
+          params.append(`filters[${key}]`, String(value));
         });
       }
 
+      // sort is Record<string, 'asc' | 'desc'>
+      // → ?sort[createdAt]=desc
       if (queryOptions?.sort) {
         Object.entries(queryOptions.sort).forEach(([key, value]) => {
           params.append(`sort[${key}]`, value);
         });
       }
 
+      // ?page=1&limit=10
       if (queryOptions?.pagination) {
-        params.append('page', queryOptions.pagination.page.toString());
-        params.append('limit', queryOptions.pagination.limit.toString());
+        params.append("page", String(queryOptions.pagination.page));
+        params.append("limit", String(queryOptions.pagination.limit));
       }
 
-      if (queryOptions?.includes) {
-        Object.entries(queryOptions.includes).forEach(([key, value]) => {
-          if (value) params.append(`includes[${key}]`, 'true');
-        });
-      }
-
-      if (params.toString()) {
-        url += `?${params.toString()}`;
-      }
+      const url = `${env.API_URL}/api/bookings/admin${
+        params.toString() ? `?${params.toString()}` : ""
+      }`;
 
       const res = await fetch(url, {
-        headers: {
-          Cookie: allCookies,
-        },
+        headers: { Cookie: allCookies },
         cache: "no-store",
       });
 
-      if (!res.ok) {
-        return { data: null, error: "failed to fetch booking" };
-      }
+      if (!res.ok) return { data: null, error: "Failed to fetch bookings" };
 
       const data = await res.json();
-      return { data: data, error: null };
-    } catch (error) {
+      return { data, error: null };
+    } catch {
       return {
         data: null,
         error: "Server connection failed. Please try again.",
